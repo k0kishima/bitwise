@@ -1,19 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:intl/intl.dart';
 
 class Screen extends StatelessWidget {
   const Screen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    Intl.defaultLocale = Localizations.localeOf(context).languageCode;
+    final l10n = L10n.of(context);
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Bitwise'),
+        title: Text(l10n.appName),
         backgroundColor: Colors.black87,
         foregroundColor: Colors.white,
       ),
       backgroundColor: Colors.white,
-      body: const Center(
-        child: Text('Welcome to Bitwise!'),
+      body: Center(
+        child: Text(l10n.greeting),
       ),
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -33,7 +38,7 @@ class Screen extends StatelessWidget {
               ),
             ),
             child: Text(
-              'Play',
+              l10n.play,
               style: TextStyle(
                 color: Colors.grey.shade600,
               ),
