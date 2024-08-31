@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import '../../play/presentation/screen.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class Screen extends StatelessWidget {
-  const Screen({super.key});
+class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +27,10 @@ class Screen extends StatelessWidget {
           height: 50,
           child: ElevatedButton(
             onPressed: () {
-              // Add your play button logic here
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const PlayScreen()),
+              );
             },
             child: Text(l10n.play),
           ),

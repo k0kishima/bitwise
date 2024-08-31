@@ -40,7 +40,7 @@ class MainApp extends StatelessWidget {
           bodySmall: baseTextStyle,
         ),
       ),
-      home: const Screen(),
+      home: const HomeScreen(),
     );
   }
 }
