@@ -1,20 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../end/presentation/screen.dart';
+import '../../../../game_settings.dart';
 import 'dart:math';
 
-class PlayScreen extends StatefulWidget {
+class PlayScreen extends ConsumerStatefulWidget {
   const PlayScreen({super.key});
 
   @override
   _PlayScreenState createState() => _PlayScreenState();
 }
 
-class _PlayScreenState extends State<PlayScreen> {
+class _PlayScreenState extends ConsumerState<PlayScreen> {
   int targetValue = 0;
   List<String> values = List.filled(8, '0');
   bool correct = false;
   int correctAnswers = 0;
-  final int totalQuestions = 10;
 
   @override
   void initState() {
@@ -29,6 +30,7 @@ class _PlayScreenState extends State<PlayScreen> {
   }
 
   void _toggleValue(int index) {
+    final totalQuestions = ref.read(gameSettingsProvider);
     setState(() {
       values[index] = values[index] == '0' ? '1' : '0';
       int decimalValue = int.parse(values.join(), radix: 2);
@@ -57,6 +59,7 @@ class _PlayScreenState extends State<PlayScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final totalQuestions = ref.watch(gameSettingsProvider);
     return Scaffold(
       appBar: AppBar(),
       body: Stack(
