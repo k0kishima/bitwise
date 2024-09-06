@@ -8,7 +8,6 @@ class SettingsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final totalQuestions = ref.watch(gameSettingsProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -19,41 +18,69 @@ class SettingsScreen extends ConsumerWidget {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            const Text(
-              'Number of Questions',
-              style: TextStyle(fontSize: 18),
-            ),
-            const SizedBox(height: 20),
-            Slider(
-              value: totalQuestions.toDouble(),
-              min: 5,
-              max: 20,
-              divisions: 15,
-              label: totalQuestions.toString(),
-              onChanged: (double value) {
-                ref.read(gameSettingsProvider.notifier).setTotalQuestions(value.toInt());
-              },
-              activeColor: theme.primaryColor,
-              inactiveColor: theme.disabledColor,
-            ),
+            const SettingsSliderWidget(),
             const SizedBox(height: 40),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: theme.elevatedButtonTheme.style?.backgroundColor?.resolve({}),
-                foregroundColor: theme.elevatedButtonTheme.style?.foregroundColor?.resolve({}),
-                padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15),
-                ),
-              ),
-              child: const Text('Save Settings'),
-            ),
+            const SaveSettingsButton(),
           ],
         ),
       ),
+    );
+  }
+}
+
+class SettingsSliderWidget extends ConsumerWidget {
+  const SettingsSliderWidget({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final totalQuestions = ref.watch(gameSettingsProvider);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'Number of Questions',
+          style: TextStyle(fontSize: 18),
+        ),
+        const SizedBox(height: 20),
+        Slider(
+          value: totalQuestions.toDouble(),
+          min: 5,
+          max: 20,
+          divisions: 15,
+          label: totalQuestions.toString(),
+          onChanged: (double value) {
+            ref.read(gameSettingsProvider.notifier).setTotalQuestions(value.toInt());
+          },
+          activeColor: theme.primaryColor,
+          inactiveColor: theme.disabledColor,
+        ),
+      ],
+    );
+  }
+}
+
+class SaveSettingsButton extends StatelessWidget {
+  const SaveSettingsButton({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return ElevatedButton(
+      onPressed: () {
+        Navigator.pop(context);
+      },
+      style: ElevatedButton.styleFrom(
+        backgroundColor: theme.elevatedButtonTheme.style?.backgroundColor?.resolve({}),
+        foregroundColor: theme.elevatedButtonTheme.style?.foregroundColor?.resolve({}),
+        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15),
+        ),
+      ),
+      child: const Text('Save Settings'),
     );
   }
 }

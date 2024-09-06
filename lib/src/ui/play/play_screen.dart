@@ -53,81 +53,129 @@ class _PlayScreenState extends ConsumerState<PlayScreen> {
   @override
   Widget build(BuildContext context) {
     final totalQuestions = ref.watch(gameSettingsProvider);
+
     return Scaffold(
       appBar: AppBar(),
       body: Stack(
         children: [
           Column(
             children: [
-              LinearProgressIndicator(
-                value: correctAnswers / totalQuestions,
-                backgroundColor: Colors.grey.shade300,
-                color: Colors.grey.shade600,
-              ),
+              ProgressBarWidget(correctAnswers: correctAnswers, totalQuestions: totalQuestions),
               Expanded(
                 child: Stack(
                   children: [
                     if (!correct)
-                      Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              targetValue.toString(),
-                              style: const TextStyle(fontSize: 24),
-                            ),
-                            const SizedBox(height: 20),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: values.asMap().entries.map((entry) {
-                                int index = entry.key;
-                                String value = entry.value;
-                                return GestureDetector(
-                                  onTap: () => _toggleValue(index),
-                                  child: Container(
-                                    width: 40,
-                                    height: 40,
-                                    alignment: Alignment.center,
-                                    margin: const EdgeInsets.symmetric(horizontal: 5),
-                                    color: Colors.grey.shade200,
-                                    child: Text(
-                                      value,
-                                      style: const TextStyle(fontSize: 24),
-                                    ),
-                                  ),
-                                );
-                              }).toList(),
-                            ),
-                          ],
-                        ),
+                      BinaryInputWidget(
+                        targetValue: targetValue,
+                        values: values,
+                        onToggle: _toggleValue,
                       ),
                     if (correct)
-                      Positioned.fill(
-                        child: Center(
-                          child: Padding(
-                            padding: const EdgeInsets.all(30.0),
-                            child: Container(
-                              width: MediaQuery.of(context).size.width * 0.8,
-                              height: MediaQuery.of(context).size.width * 0.8,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: Colors.green.withOpacity(0.9),
-                              ),
-                              child: const Icon(
-                                Icons.check,
-                                size: 100,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
+                      const CorrectAnswerWidget(),
                   ],
                 ),
               ),
             ],
           ),
         ],
+      ),
+    );
+  }
+}
+
+class ProgressBarWidget extends StatelessWidget {
+  final int correctAnswers;
+  final int totalQuestions;
+
+  const ProgressBarWidget({
+    Key? key,
+    required this.correctAnswers,
+    required this.totalQuestions,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return LinearProgressIndicator(
+      value: correctAnswers / totalQuestions,
+      backgroundColor: Colors.grey.shade300,
+      color: Colors.grey.shade600,
+    );
+  }
+}
+
+class BinaryInputWidget extends StatelessWidget {
+  final int targetValue;
+  final List<String> values;
+  final void Function(int) onToggle;
+
+  const BinaryInputWidget({
+    Key? key,
+    required this.targetValue,
+    required this.values,
+    required this.onToggle,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            targetValue.toString(),
+            style: const TextStyle(fontSize: 24),
+          ),
+          const SizedBox(height: 20),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: values.asMap().entries.map((entry) {
+              int index = entry.key;
+              String value = entry.value;
+              return GestureDetector(
+                onTap: () => onToggle(index),
+                child: Container(
+                  width: 40,
+                  height: 40,
+                  alignment: Alignment.center,
+                  margin: const EdgeInsets.symmetric(horizontal: 5),
+                  color: Colors.grey.shade200,
+                  child: Text(
+                    value,
+                    style: const TextStyle(fontSize: 24),
+                  ),
+                ),
+              );
+            }).toList(),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class CorrectAnswerWidget extends StatelessWidget {
+  const CorrectAnswerWidget({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Positioned.fill(
+      child: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(30.0),
+          child: Container(
+            width: MediaQuery.of(context).size.width * 0.8,
+            height: MediaQuery.of(context).size.width * 0.8,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: Colors.green.withOpacity(0.9),
+            ),
+            child: const Icon(
+              Icons.check,
+              size: 100,
+              color: Colors.white,
+            ),
+          ),
+        ),
       ),
     );
   }
