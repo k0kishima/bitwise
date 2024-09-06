@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:d2b/src/ui/play/end_screen.dart';
 import 'package:d2b/src/state/game_settings.dart';
-import 'dart:math';
+import 'package:d2b/src/domain/game_logic.dart';
 
 class PlayScreen extends ConsumerStatefulWidget {
   const PlayScreen({super.key});
@@ -20,21 +20,14 @@ class _PlayScreenState extends ConsumerState<PlayScreen> {
   @override
   void initState() {
     super.initState();
-    _generateTargetValue();
-  }
-
-  void _generateTargetValue() {
-    setState(() {
-      targetValue = Random().nextInt(256);
-    });
+    targetValue = GameLogic.generateTargetValue();
   }
 
   void _toggleValue(int index) {
     final totalQuestions = ref.read(gameSettingsProvider);
     setState(() {
       values[index] = values[index] == '0' ? '1' : '0';
-      int decimalValue = int.parse(values.join(), radix: 2);
-      if (decimalValue == targetValue) {
+      if (GameLogic.isAnswerCorrect(values, targetValue)) {
         correct = true;
         correctAnswers += 1;
         if (correctAnswers >= totalQuestions) {
@@ -48,7 +41,7 @@ class _PlayScreenState extends ConsumerState<PlayScreen> {
           Future.delayed(const Duration(milliseconds: 500), () {
             setState(() {
               correct = false;
-              _generateTargetValue();
+              targetValue = GameLogic.generateTargetValue();
               values = List.filled(8, '0');
             });
           });
