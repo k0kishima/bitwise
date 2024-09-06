@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:d2b/src/features/end/presentation/screen.dart';
+import 'package:d2b/src/ui/play/end_screen.dart';
 import 'package:d2b/src/state/game_settings.dart';
 import 'dart:math';
 

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:d2b/src/features/play/presentation/screen.dart';
+import 'package:d2b/src/ui/play/play_screen.dart';
 
 class EndScreen extends StatelessWidget {
   const EndScreen({super.key});
