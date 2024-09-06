@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import '../../play/presentation/screen.dart';
-import '../../settings/presentation/screen.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:d2b/src/features/play/presentation/screen.dart';
+import 'package:d2b/src/features/settings/presentation/screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
