@@ -5,7 +5,9 @@ import 'package:d2b/src/state/game_settings.dart';
 import 'package:d2b/src/domain/game_logic.dart';
 
 class PlayScreen extends ConsumerStatefulWidget {
-  const PlayScreen({super.key});
+  final bool isTrainingMode;
+
+  const PlayScreen({super.key, required this.isTrainingMode});
 
   @override
   _PlayScreenState createState() => _PlayScreenState();
@@ -33,20 +35,37 @@ class _PlayScreenState extends ConsumerState<PlayScreen> {
   }
 
   void _toggleValue(int index) {
-    final totalQuestions = ref.read(gameSettingsProvider);
-    setState(() {
-      values[index] = values[index] == '0' ? '1' : '0';
-      if (GameLogic.isAnswerCorrect(values, targetValue)) {
-        correct = true;
-        correctAnswers += 1;
-        if (correctAnswers >= totalQuestions) {
-          Future.delayed(const Duration(milliseconds: 500), () {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => const EndScreen()),
-            );
-          });
-        } else {
+    if (!widget.isTrainingMode) {
+      final totalQuestions = ref.read(gameSettingsProvider);
+      setState(() {
+        values[index] = values[index] == '0' ? '1' : '0';
+        if (GameLogic.isAnswerCorrect(values, targetValue)) {
+          correct = true;
+          correctAnswers += 1;
+          if (correctAnswers >= totalQuestions) {
+            Future.delayed(const Duration(milliseconds: 500), () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => const EndScreen()),
+              );
+            });
+          } else {
+            Future.delayed(const Duration(milliseconds: 500), () {
+              setState(() {
+                correct = false;
+                targetValue = GameLogic.generateTargetValue();
+                values = List.filled(8, '0');
+              });
+            });
+          }
+        }
+      });
+    } else {
+      // Infinite loop in training mode
+      setState(() {
+        values[index] = values[index] == '0' ? '1' : '0';
+        if (GameLogic.isAnswerCorrect(values, targetValue)) {
+          correct = true;
           Future.delayed(const Duration(milliseconds: 500), () {
             setState(() {
               correct = false;
@@ -55,28 +74,30 @@ class _PlayScreenState extends ConsumerState<PlayScreen> {
             });
           });
         }
-      }
-    });
+      });
+    }
   }
 
   void _showHalfModal(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      builder: (context) {
-        return CheatSheetWidget(
-          targetValue: targetValue,
-          scrollController: _scrollController,
-        );
-      },
-    );
-
-    Future.delayed(const Duration(milliseconds: 200), () {
-      _scrollController.animateTo(
-        targetValue * 40.0,
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeInOut,
+    if (widget.isTrainingMode) {
+      showModalBottomSheet(
+        context: context,
+        builder: (context) {
+          return CheatSheetWidget(
+            targetValue: targetValue,
+            scrollController: _scrollController,
+          );
+        },
       );
-    });
+
+      Future.delayed(const Duration(milliseconds: 200), () {
+        _scrollController.animateTo(
+          targetValue * 40.0,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
+        );
+      });
+    }
   }
 
   @override
@@ -89,9 +110,11 @@ class _PlayScreenState extends ConsumerState<PlayScreen> {
         children: [
           Column(
             children: [
-              ProgressBarWidget(
+              if (!widget.isTrainingMode)
+                ProgressBarWidget(
                   correctAnswers: correctAnswers,
-                  totalQuestions: totalQuestions),
+                  totalQuestions: totalQuestions,
+                ),
               Expanded(
                 child: Stack(
                   children: [
@@ -107,18 +130,19 @@ class _PlayScreenState extends ConsumerState<PlayScreen> {
               ),
             ],
           ),
-          Positioned(
-            bottom: 20,
-            right: 20,
-            child: FloatingActionButton(
-              onPressed: () => _showHalfModal(context),
-              backgroundColor: Colors.grey.shade800,
-              child: const Icon(
-                Icons.visibility,
-                color: Colors.white,
+          if (widget.isTrainingMode)
+            Positioned(
+              bottom: 20,
+              right: 20,
+              child: FloatingActionButton(
+                onPressed: () => _showHalfModal(context),
+                backgroundColor: Colors.grey.shade800,
+                child: const Icon(
+                  Icons.visibility,
+                  color: Colors.white,
+                ),
               ),
             ),
-          ),
         ],
       ),
     );

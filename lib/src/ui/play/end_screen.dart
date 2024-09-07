@@ -68,7 +68,7 @@ class EndScreenButtons extends StatelessWidget {
           onPressed: () {
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => const PlayScreen()),
+              MaterialPageRoute(builder: (context) => const PlayScreen(isTrainingMode: false,)),
             );
           },
           style: buttonStyle,
