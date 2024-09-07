@@ -60,7 +60,9 @@ class _PlayScreenState extends ConsumerState<PlayScreen> {
         children: [
           Column(
             children: [
-              ProgressBarWidget(correctAnswers: correctAnswers, totalQuestions: totalQuestions),
+              ProgressBarWidget(
+                  correctAnswers: correctAnswers,
+                  totalQuestions: totalQuestions),
               Expanded(
                 child: Stack(
                   children: [
@@ -70,8 +72,7 @@ class _PlayScreenState extends ConsumerState<PlayScreen> {
                         values: values,
                         onToggle: _toggleValue,
                       ),
-                    if (correct)
-                      const CorrectAnswerWidget(),
+                    if (correct) const CorrectAnswerWidget(),
                   ],
                 ),
               ),
@@ -88,10 +89,10 @@ class ProgressBarWidget extends StatelessWidget {
   final int totalQuestions;
 
   const ProgressBarWidget({
-    Key? key,
+    super.key,
     required this.correctAnswers,
     required this.totalQuestions,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -109,11 +110,11 @@ class BinaryInputWidget extends StatelessWidget {
   final void Function(int) onToggle;
 
   const BinaryInputWidget({
-    Key? key,
+    super.key,
     required this.targetValue,
     required this.values,
     required this.onToggle,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -154,7 +155,7 @@ class BinaryInputWidget extends StatelessWidget {
 }
 
 class CorrectAnswerWidget extends StatelessWidget {
-  const CorrectAnswerWidget({Key? key}) : super(key: key);
+  const CorrectAnswerWidget({super.key});
 
   @override
   Widget build(BuildContext context) {

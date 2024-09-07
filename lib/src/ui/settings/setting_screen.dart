@@ -14,13 +14,13 @@ class SettingsScreen extends ConsumerWidget {
         title: const Text('Settings'),
         backgroundColor: theme.primaryColor,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
+      body: const Padding(
+        padding: EdgeInsets.all(16.0),
         child: Column(
           children: [
-            const SettingsSliderWidget(),
-            const SizedBox(height: 40),
-            const SaveSettingsButton(),
+            SettingsSliderWidget(),
+            SizedBox(height: 40),
+            SaveSettingsButton(),
           ],
         ),
       ),
@@ -51,7 +51,9 @@ class SettingsSliderWidget extends ConsumerWidget {
           divisions: 15,
           label: totalQuestions.toString(),
           onChanged: (double value) {
-            ref.read(gameSettingsProvider.notifier).setTotalQuestions(value.toInt());
+            ref
+                .read(gameSettingsProvider.notifier)
+                .setTotalQuestions(value.toInt());
           },
           activeColor: theme.primaryColor,
           inactiveColor: theme.disabledColor,
@@ -73,8 +75,10 @@ class SaveSettingsButton extends StatelessWidget {
         Navigator.pop(context);
       },
       style: ElevatedButton.styleFrom(
-        backgroundColor: theme.elevatedButtonTheme.style?.backgroundColor?.resolve({}),
-        foregroundColor: theme.elevatedButtonTheme.style?.foregroundColor?.resolve({}),
+        backgroundColor:
+            theme.elevatedButtonTheme.style?.backgroundColor?.resolve({}),
+        foregroundColor:
+            theme.elevatedButtonTheme.style?.foregroundColor?.resolve({}),
         padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(15),

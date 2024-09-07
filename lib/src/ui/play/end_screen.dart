@@ -10,13 +10,13 @@ class EndScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Game Over'),
       ),
-      body: Center(
+      body: const Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const CongratulationsMessage(),
-            const SizedBox(height: 20),
-            const EndScreenButtons(),
+            CongratulationsMessage(),
+            SizedBox(height: 20),
+            EndScreenButtons(),
           ],
         ),
       ),
