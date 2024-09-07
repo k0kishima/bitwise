@@ -17,10 +17,19 @@ class _PlayScreenState extends ConsumerState<PlayScreen> {
   bool correct = false;
   int correctAnswers = 0;
 
+  late ScrollController _scrollController;
+
   @override
   void initState() {
     super.initState();
     targetValue = GameLogic.generateTargetValue();
+    _scrollController = ScrollController();
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
   }
 
   void _toggleValue(int index) {
@@ -47,6 +56,26 @@ class _PlayScreenState extends ConsumerState<PlayScreen> {
           });
         }
       }
+    });
+  }
+
+  void _showHalfModal(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return CheatSheetWidget(
+          targetValue: targetValue,
+          scrollController: _scrollController,
+        );
+      },
+    );
+
+    Future.delayed(const Duration(milliseconds: 200), () {
+      _scrollController.animateTo(
+        targetValue * 40.0,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
     });
   }
 
@@ -77,6 +106,74 @@ class _PlayScreenState extends ConsumerState<PlayScreen> {
                 ),
               ),
             ],
+          ),
+          Positioned(
+            bottom: 20,
+            right: 20,
+            child: FloatingActionButton(
+              onPressed: () => _showHalfModal(context),
+              backgroundColor: Colors.grey.shade800,
+              child: const Icon(
+                Icons.visibility,
+                color: Colors.white,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class CheatSheetWidget extends StatelessWidget {
+  final int targetValue;
+  final ScrollController scrollController;
+
+  const CheatSheetWidget({
+    super.key,
+    required this.targetValue,
+    required this.scrollController,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 300,
+      child: Column(
+        children: [
+          const Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Text(
+              'Cheat Sheet',
+              style: TextStyle(fontSize: 24, color: Colors.black87),
+            ),
+          ),
+          Expanded(
+            child: ListView.builder(
+              controller: scrollController,
+              itemCount: 256,
+              itemBuilder: (context, index) {
+                return Container(
+                  color: index == targetValue
+                      ? Colors.grey.shade300.withOpacity(0.5)
+                      : Colors.transparent,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Text('$index',
+                            style: const TextStyle(color: Colors.black87)),
+                        Text(
+                          index.toRadixString(2).padLeft(8, '0'),
+                          style: const TextStyle(color: Colors.black87),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            ),
           ),
         ],
       ),
@@ -124,7 +221,7 @@ class BinaryInputWidget extends StatelessWidget {
         children: [
           Text(
             targetValue.toString(),
-            style: const TextStyle(fontSize: 24),
+            style: const TextStyle(fontSize: 24, color: Colors.black87),
           ),
           const SizedBox(height: 20),
           Row(
@@ -142,7 +239,7 @@ class BinaryInputWidget extends StatelessWidget {
                   color: Colors.grey.shade200,
                   child: Text(
                     value,
-                    style: const TextStyle(fontSize: 24),
+                    style: const TextStyle(fontSize: 24, color: Colors.black87),
                   ),
                 ),
               );
