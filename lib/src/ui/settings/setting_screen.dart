@@ -9,14 +9,8 @@ class SettingScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final theme = Theme.of(context);
-
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Settings'),
-        backgroundColor: theme.primaryColor,
-      ),
-      body: const Padding(
+    return const Scaffold(
+      body: Padding(
         padding: EdgeInsets.all(16.0),
         child: Column(
           children: [

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:d2b/src/ui/settings/setting_screen.dart';
 import 'package:go_router/go_router.dart';
 
 class HomeScreen extends ConsumerWidget {
@@ -11,15 +12,31 @@ class HomeScreen extends ConsumerWidget {
     final l10n = L10n.of(context);
     final theme = Theme.of(context);
 
+    void showSettingsModal() {
+      showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        builder: (BuildContext context) {
+          return DraggableScrollableSheet(
+            expand: false,
+            builder: (BuildContext context, ScrollController scrollController) {
+              return const Padding(
+                padding: EdgeInsets.all(16.0),
+                child: SettingScreen(),
+              );
+            },
+          );
+        },
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text(l10n.appName),
         actions: [
           IconButton(
             icon: const Icon(Icons.settings),
-            onPressed: () {
-              GoRouter.of(context).go('/setting');
-            },
+            onPressed: showSettingsModal,
           ),
         ],
       ),
