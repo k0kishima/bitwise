@@ -20,9 +20,9 @@ class SettingScreen extends ConsumerWidget {
         padding: EdgeInsets.all(16.0),
         child: Column(
           children: [
-            SettingsSliderWidget(),
-            SizedBox(height: 20),
             TrainingModeSwitch(),
+            SizedBox(height: 20),
+            SettingsSliderWidget(),
             Spacer(),
             SaveSettingsButton(),
           ],
@@ -39,6 +39,11 @@ class SettingsSliderWidget extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final totalQuestions = ref.watch(gameSettingsProvider);
+    final isTrainingMode = ref.watch(trainingModeProvider);
+
+    if (isTrainingMode) {
+      return const SizedBox.shrink();
+    }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
