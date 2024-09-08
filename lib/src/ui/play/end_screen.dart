@@ -1,24 +1,28 @@
 import 'package:flutter/material.dart';
-import 'package:d2b/src/ui/play/play_screen.dart';
 
 class EndScreen extends StatelessWidget {
   const EndScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Game Over'),
-      ),
-      body: const Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            CongratulationsMessage(),
-            SizedBox(height: 20),
-            EndScreenButtons(),
-          ],
-        ),
+    return const Scaffold(
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Expanded(
+            child: Center(
+              child: CongratulationsMessage(),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.all(8.0),
+            child: SizedBox(
+              width: double.infinity,
+              height: 50,
+              child: HomeButton(),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -36,8 +40,8 @@ class CongratulationsMessage extends StatelessWidget {
   }
 }
 
-class EndScreenButtons extends StatelessWidget {
-  const EndScreenButtons({super.key});
+class HomeButton extends StatelessWidget {
+  const HomeButton({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -50,34 +54,12 @@ class EndScreenButtons extends StatelessWidget {
       ),
     );
 
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        ElevatedButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          style: buttonStyle,
-          child: const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-            child: Text('Home'),
-          ),
-        ),
-        const SizedBox(width: 10),
-        ElevatedButton(
-          onPressed: () {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => const PlayScreen(isTrainingMode: false,)),
-            );
-          },
-          style: buttonStyle,
-          child: const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-            child: Text('Replay'),
-          ),
-        ),
-      ],
+    return ElevatedButton(
+      onPressed: () {
+        Navigator.pop(context);
+      },
+      style: buttonStyle,
+      child: const Text('Home'),
     );
   }
 }
