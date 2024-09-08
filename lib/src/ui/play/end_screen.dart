@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class EndScreen extends StatelessWidget {
   const EndScreen({super.key});
@@ -56,7 +57,7 @@ class HomeButton extends StatelessWidget {
 
     return ElevatedButton(
       onPressed: () {
-        Navigator.pop(context);
+        GoRouter.of(context).go('/');
       },
       style: buttonStyle,
       child: const Text('Home'),

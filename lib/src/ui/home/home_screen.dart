@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:d2b/src/ui/play/play_screen.dart';
-import 'package:d2b/src/ui/settings/setting_screen.dart';
-import 'package:d2b/src/state/training_mode.dart';
+import 'package:go_router/go_router.dart';
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
@@ -12,7 +10,6 @@ class HomeScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = L10n.of(context);
     final theme = Theme.of(context);
-    final isTrainingMode = ref.watch(trainingModeProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -21,12 +18,7 @@ class HomeScreen extends ConsumerWidget {
           IconButton(
             icon: const Icon(Icons.settings),
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const SettingsScreen(),
-                ),
-              );
+              GoRouter.of(context).go('/setting');
             },
           ),
         ],
@@ -44,12 +36,7 @@ class HomeScreen extends ConsumerWidget {
           height: 50,
           child: ElevatedButton(
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => PlayScreen(isTrainingMode: isTrainingMode),
-                ),
-              );
+              GoRouter.of(context).go('/play');
             },
             child: Text(l10n.play),
           ),

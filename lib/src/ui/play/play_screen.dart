@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:d2b/src/ui/play/end_screen.dart';
 import 'package:d2b/src/state/game_settings.dart';
+import 'package:d2b/src/state/training_mode.dart';
 import 'package:d2b/src/domain/game_logic.dart';
+import 'package:go_router/go_router.dart';
 
 class PlayScreen extends ConsumerStatefulWidget {
-  final bool isTrainingMode;
-
-  const PlayScreen({super.key, required this.isTrainingMode});
+  const PlayScreen({super.key});
 
   @override
   _PlayScreenState createState() => _PlayScreenState();
@@ -34,8 +33,8 @@ class _PlayScreenState extends ConsumerState<PlayScreen> {
     super.dispose();
   }
 
-  void _toggleValue(int index) {
-    if (!widget.isTrainingMode) {
+  void _toggleValue(int index, bool isTrainingMode) {
+    if (!isTrainingMode) {
       final totalQuestions = ref.read(gameSettingsProvider);
       setState(() {
         values[index] = values[index] == '0' ? '1' : '0';
@@ -43,12 +42,7 @@ class _PlayScreenState extends ConsumerState<PlayScreen> {
           correct = true;
           correctAnswers += 1;
           if (correctAnswers >= totalQuestions) {
-            Future.delayed(const Duration(milliseconds: 500), () {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => const EndScreen()),
-              );
-            });
+            GoRouter.of(context).go('/play/end');
           } else {
             Future.delayed(const Duration(milliseconds: 500), () {
               setState(() {
@@ -61,7 +55,6 @@ class _PlayScreenState extends ConsumerState<PlayScreen> {
         }
       });
     } else {
-      // Infinite loop in training mode
       setState(() {
         values[index] = values[index] == '0' ? '1' : '0';
         if (GameLogic.isAnswerCorrect(values, targetValue)) {
@@ -78,8 +71,8 @@ class _PlayScreenState extends ConsumerState<PlayScreen> {
     }
   }
 
-  void _showHalfModal(BuildContext context) {
-    if (widget.isTrainingMode) {
+  void _showHalfModal(BuildContext context, bool isTrainingMode) {
+    if (isTrainingMode) {
       showModalBottomSheet(
         context: context,
         builder: (context) {
@@ -103,6 +96,7 @@ class _PlayScreenState extends ConsumerState<PlayScreen> {
   @override
   Widget build(BuildContext context) {
     final totalQuestions = ref.watch(gameSettingsProvider);
+    final isTrainingMode = ref.watch(trainingModeProvider);
 
     return Scaffold(
       appBar: AppBar(),
@@ -110,7 +104,7 @@ class _PlayScreenState extends ConsumerState<PlayScreen> {
         children: [
           Column(
             children: [
-              if (!widget.isTrainingMode)
+              if (!isTrainingMode)
                 ProgressBarWidget(
                   correctAnswers: correctAnswers,
                   totalQuestions: totalQuestions,
@@ -122,7 +116,8 @@ class _PlayScreenState extends ConsumerState<PlayScreen> {
                       BinaryInputWidget(
                         targetValue: targetValue,
                         values: values,
-                        onToggle: _toggleValue,
+                        onToggle: (index) =>
+                            _toggleValue(index, isTrainingMode),
                       ),
                     if (correct) const CorrectAnswerWidget(),
                   ],
@@ -130,12 +125,12 @@ class _PlayScreenState extends ConsumerState<PlayScreen> {
               ),
             ],
           ),
-          if (widget.isTrainingMode)
+          if (isTrainingMode)
             Positioned(
               bottom: 20,
               right: 20,
               child: FloatingActionButton(
-                onPressed: () => _showHalfModal(context),
+                onPressed: () => _showHalfModal(context, isTrainingMode),
                 backgroundColor: Colors.grey.shade800,
                 child: const Icon(
                   Icons.visibility,

@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:d2b/src/ui/home/home_screen.dart';
+import 'package:d2b/src/ui/play/play_screen.dart';
+import 'package:d2b/src/ui/play/end_screen.dart';
+import 'package:d2b/src/ui/settings/setting_screen.dart';
+import 'package:go_router/go_router.dart';
 
 void main() {
   runApp(
@@ -18,7 +22,7 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     const baseTextStyle = TextStyle(color: Colors.black54);
 
-    return MaterialApp(
+    return MaterialApp.router(
       localizationsDelegates: L10n.localizationsDelegates,
       supportedLocales: L10n.supportedLocales,
       locale: const Locale('ja', ''),
@@ -45,7 +49,31 @@ class MainApp extends StatelessWidget {
           bodySmall: baseTextStyle,
         ),
       ),
-      home: const HomeScreen(),
+      routerConfig: _router,
     );
   }
 }
+
+final _router = GoRouter(
+  initialLocation: '/',
+  routes: [
+    GoRoute(
+        path: '/',
+        builder: (context, state) => const HomeScreen(),
+        routes: [
+          GoRoute(
+              path: 'play',
+              builder: (context, state) => const PlayScreen(),
+              routes: [
+                GoRoute(
+                  path: 'end',
+                  builder: (context, state) => const EndScreen(),
+                )
+              ]),
+          GoRoute(
+            path: 'setting',
+            builder: (context, state) => const SettingScreen(),
+          ),
+        ]),
+  ],
+);

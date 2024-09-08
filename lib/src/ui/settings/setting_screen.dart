@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:d2b/src/state/game_settings.dart';
 import 'package:d2b/src/state/training_mode.dart';
+import 'package:go_router/go_router.dart';
 
-class SettingsScreen extends ConsumerWidget {
-  const SettingsScreen({super.key});
+class SettingScreen extends ConsumerWidget {
+  const SettingScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -89,7 +90,6 @@ class TrainingModeSwitch extends ConsumerWidget {
           activeColor: Colors.black,
           inactiveTrackColor: Colors.grey.shade300,
           inactiveThumbColor: Colors.grey.shade600,
-
         ),
       ],
     );
@@ -108,7 +108,7 @@ class SaveSettingsButton extends StatelessWidget {
       height: 50,
       child: ElevatedButton(
         onPressed: () {
-          Navigator.pop(context);
+          GoRouter.of(context).pop();
         },
         style: ElevatedButton.styleFrom(
           backgroundColor:

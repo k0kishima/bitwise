@@ -12,6 +12,7 @@ class TrainingModeNotifier extends StateNotifier<bool> {
   }
 }
 
-final trainingModeProvider = StateNotifierProvider<TrainingModeNotifier, bool>((ref) {
+final trainingModeProvider =
+    StateNotifierProvider<TrainingModeNotifier, bool>((ref) {
   return TrainingModeNotifier();
 });
