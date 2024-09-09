@@ -58,22 +58,27 @@ final _router = GoRouter(
   initialLocation: '/',
   routes: [
     GoRoute(
-        path: '/',
-        builder: (context, state) => const HomeScreen(),
-        routes: [
-          GoRoute(
-              path: 'play',
-              builder: (context, state) => const PlayScreen(),
-              routes: [
-                GoRoute(
-                  path: 'end',
-                  builder: (context, state) => const EndScreen(),
-                )
-              ]),
-          GoRoute(
-            path: 'setting',
-            builder: (context, state) => const SettingScreen(),
-          ),
-        ]),
+      path: '/',
+      builder: (context, state) => const HomeScreen(),
+      routes: [
+        GoRoute(
+          path: 'play',
+          builder: (context, state) => const PlayScreen(),
+          routes: [
+            GoRoute(
+              path: 'end',
+              builder: (context, state) {
+                final answerTimes = state.extra as List<Duration>?;
+                return EndScreen(answerTimes: answerTimes ?? []);
+              },
+            )
+          ],
+        ),
+        GoRoute(
+          path: 'setting',
+          builder: (context, state) => const SettingScreen(),
+        ),
+      ],
+    ),
   ],
 );

@@ -20,11 +20,15 @@ class _PlayScreenState extends ConsumerState<PlayScreen> {
 
   late ScrollController _scrollController;
 
+  late DateTime startTime;
+  List<Duration> answerTimes = [];
+
   @override
   void initState() {
     super.initState();
     targetValue = GameLogic.generateTargetValue();
     _scrollController = ScrollController();
+    startTime = DateTime.now();
   }
 
   @override
@@ -40,15 +44,18 @@ class _PlayScreenState extends ConsumerState<PlayScreen> {
         values[index] = values[index] == '0' ? '1' : '0';
         if (GameLogic.isAnswerCorrect(values, targetValue)) {
           correct = true;
+          answerTimes.add(DateTime.now().difference(startTime));
+
           correctAnswers += 1;
           if (correctAnswers >= totalQuestions) {
-            GoRouter.of(context).go('/play/end');
+            GoRouter.of(context).go('/play/end', extra: answerTimes);
           } else {
             Future.delayed(const Duration(milliseconds: 500), () {
               setState(() {
                 correct = false;
                 targetValue = GameLogic.generateTargetValue();
                 values = List.filled(8, '0');
+                startTime = DateTime.now();
               });
             });
           }
