@@ -4,6 +4,7 @@ import 'package:d2b/src/state/game_settings.dart';
 import 'package:d2b/src/state/training_mode.dart';
 import 'package:d2b/src/domain/game_logic.dart';
 import 'package:go_router/go_router.dart';
+import 'dart:async';
 
 class PlayScreen extends ConsumerStatefulWidget {
   const PlayScreen({super.key});
@@ -17,23 +18,32 @@ class _PlayScreenState extends ConsumerState<PlayScreen> {
   List<String> values = List.filled(8, '0');
   bool correct = false;
   int correctAnswers = 0;
+  List<Map<String, dynamic>> questionDetails = [];
 
   late ScrollController _scrollController;
-
-  late DateTime startTime;
-  List<Duration> answerTimes = [];
+  Timer? _timer;
+  int startTime = 0;
+  int totalDuration = 0;
 
   @override
   void initState() {
     super.initState();
     targetValue = GameLogic.generateTargetValue();
     _scrollController = ScrollController();
-    startTime = DateTime.now();
+
+    _timer = Timer.periodic(const Duration(seconds: 1), (Timer timer) {
+      setState(() {
+        totalDuration++;
+      });
+    });
+
+    startTime = totalDuration;
   }
 
   @override
   void dispose() {
     _scrollController.dispose();
+    _timer?.cancel();
     super.dispose();
   }
 
@@ -44,18 +54,29 @@ class _PlayScreenState extends ConsumerState<PlayScreen> {
         values[index] = values[index] == '0' ? '1' : '0';
         if (GameLogic.isAnswerCorrect(values, targetValue)) {
           correct = true;
-          answerTimes.add(DateTime.now().difference(startTime));
-
           correctAnswers += 1;
+
+          int questionTime = totalDuration - startTime;
+          double percentage = (questionTime / totalDuration) * 100;
+
+          questionDetails.add({
+            'question': targetValue.toString(),
+            'time': questionTime,
+            'percentage': percentage.toStringAsFixed(2),
+          });
+
           if (correctAnswers >= totalQuestions) {
-            GoRouter.of(context).go('/play/end', extra: answerTimes);
+            GoRouter.of(context).go('/play/end', extra: {
+              'totalDuration': totalDuration,
+              'questionDetails': questionDetails,
+            });
           } else {
             Future.delayed(const Duration(milliseconds: 500), () {
               setState(() {
                 correct = false;
                 targetValue = GameLogic.generateTargetValue();
                 values = List.filled(8, '0');
-                startTime = DateTime.now();
+                startTime = totalDuration;
               });
             });
           }
@@ -71,6 +92,7 @@ class _PlayScreenState extends ConsumerState<PlayScreen> {
               correct = false;
               targetValue = GameLogic.generateTargetValue();
               values = List.filled(8, '0');
+              startTime = totalDuration;
             });
           });
         }

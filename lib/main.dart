@@ -37,7 +37,7 @@ class MainApp extends StatelessWidget {
           style: ElevatedButton.styleFrom(
             backgroundColor: Colors.white,
             foregroundColor: Colors.grey.shade600,
-            side: BorderSide(color: Colors.grey.shade400, width: 1),
+            side: const BorderSide(color: Colors.grey, width: 1),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(15),
             ),
@@ -68,10 +68,24 @@ final _router = GoRouter(
             GoRoute(
               path: 'end',
               builder: (context, state) {
-                final answerTimes = state.extra as List<Duration>?;
-                return EndScreen(answerTimes: answerTimes ?? []);
+                final extra = state.extra as Map<String, dynamic>?;
+                final questionDetails =
+                    extra?['questionDetails'] as List<Map<String, dynamic>>?;
+                final totalDuration = extra?['totalDuration'] as int?;
+
+                if (questionDetails == null || totalDuration == null) {
+                  return const EndScreen(
+                    questionDetails: [],
+                    totalDuration: 0,
+                  );
+                } else {
+                  return EndScreen(
+                    questionDetails: questionDetails,
+                    totalDuration: totalDuration,
+                  );
+                }
               },
-            )
+            ),
           ],
         ),
         GoRoute(
