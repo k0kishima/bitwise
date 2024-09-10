@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:d2b/src/ui/home/home_screen.dart';
 import 'package:d2b/src/ui/play/play_screen.dart';
+import 'package:d2b/src/ui/play/training_screen.dart';
 import 'package:d2b/src/ui/play/end_screen.dart';
 import 'package:d2b/src/ui/settings/setting_screen.dart';
 import 'package:go_router/go_router.dart';
@@ -87,6 +88,10 @@ final _router = GoRouter(
               },
             ),
           ],
+        ),
+        GoRoute(
+          path: 'training',
+          builder: (context, state) => const TrainingScreen(),
         ),
         GoRoute(
           path: 'setting',
