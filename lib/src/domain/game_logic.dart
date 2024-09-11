@@ -1,5 +1,10 @@
 import 'dart:math';
 
+enum ProblemType {
+  decimalToBinary,
+  binaryToDecimal,
+}
+
 class GameLogic {
   static int generateTargetValue() {
     return Random().nextInt(256);

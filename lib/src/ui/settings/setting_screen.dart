@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:d2b/src/state/game_settings.dart';
 import 'package:d2b/src/state/training_mode.dart';
+import 'package:d2b/src/state/problem_type.dart';
 import 'package:go_router/go_router.dart';
+import 'package:d2b/src/domain/game_logic.dart';
 
 class SettingScreen extends ConsumerWidget {
   const SettingScreen({super.key});
@@ -15,6 +17,8 @@ class SettingScreen extends ConsumerWidget {
         child: Column(
           children: [
             TrainingModeSwitch(),
+            SizedBox(height: 20),
+            ProblemTypeSelector(),
             SizedBox(height: 20),
             SettingsSliderWidget(),
             Spacer(),
@@ -89,6 +93,53 @@ class TrainingModeSwitch extends ConsumerWidget {
           activeColor: Colors.black,
           inactiveTrackColor: Colors.grey.shade300,
           inactiveThumbColor: Colors.grey.shade600,
+        ),
+      ],
+    );
+  }
+}
+
+class ProblemTypeSelector extends ConsumerWidget {
+  const ProblemTypeSelector({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final problemType = ref.watch(problemTypeProvider);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'Problem Type',
+          style: TextStyle(fontSize: 18),
+        ),
+        const SizedBox(height: 20),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            ChoiceChip(
+              label: const Text('10 → 2'),
+              selected: problemType == ProblemType.decimalToBinary,
+              onSelected: (bool selected) {
+                if (selected) {
+                  ref
+                      .read(problemTypeProvider.notifier)
+                      .setProblemType(ProblemType.decimalToBinary);
+                }
+              },
+            ),
+            ChoiceChip(
+              label: const Text('2 → 10'),
+              selected: problemType == ProblemType.binaryToDecimal,
+              onSelected: (bool selected) {
+                if (selected) {
+                  ref
+                      .read(problemTypeProvider.notifier)
+                      .setProblemType(ProblemType.binaryToDecimal);
+                }
+              },
+            ),
+          ],
         ),
       ],
     );

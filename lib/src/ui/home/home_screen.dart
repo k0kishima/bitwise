@@ -20,6 +20,9 @@ class HomeScreen extends ConsumerWidget {
         builder: (BuildContext context) {
           return DraggableScrollableSheet(
             expand: false,
+            initialChildSize: 0.8,
+            maxChildSize: 0.8,
+            minChildSize: 0.8,
             builder: (BuildContext context, ScrollController scrollController) {
               return const Padding(
                 padding: EdgeInsets.all(16.0),
