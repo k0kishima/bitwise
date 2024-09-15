@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:d2b/src/state/game_settings.dart';
+import 'package:d2b/src/state/problem_type.dart';
 import 'package:d2b/src/domain/game_logic.dart';
 import 'package:go_router/go_router.dart';
 import 'dart:async';
 import 'package:d2b/src/widgets/binary_input_widget.dart';
+import 'package:d2b/src/widgets/decimal_input_widget.dart';
 import 'package:d2b/src/widgets/correct_answer_widget.dart';
 
 class PlayScreen extends ConsumerStatefulWidget {
@@ -15,7 +17,9 @@ class PlayScreen extends ConsumerStatefulWidget {
 }
 
 class _PlayScreenState extends ConsumerState<PlayScreen> {
-  int targetValue = 0;
+  List<ProblemAnswerPair> problems = [];
+  String currentProblem = '';
+  String currentAnswer = '';
   List<String> values = List.filled(8, '0');
   bool correct = false;
   int correctAnswers = 0;
@@ -29,7 +33,6 @@ class _PlayScreenState extends ConsumerState<PlayScreen> {
   @override
   void initState() {
     super.initState();
-    targetValue = GameLogic.generateTargetValue();
     _scrollController = ScrollController();
 
     _timer = Timer.periodic(const Duration(seconds: 1), (Timer timer) {
@@ -39,6 +42,8 @@ class _PlayScreenState extends ConsumerState<PlayScreen> {
     });
 
     startTime = totalDuration;
+
+    _initializeGame();
   }
 
   @override
@@ -48,11 +53,32 @@ class _PlayScreenState extends ConsumerState<PlayScreen> {
     super.dispose();
   }
 
-  void _toggleValue(int index) {
+  void _initializeGame() {
     final totalQuestions = ref.read(gameSettingsProvider);
-    setState(() {
-      values[index] = values[index] == '0' ? '1' : '0';
-      if (GameLogic.isAnswerCorrect(values, targetValue)) {
+    final problemType = ref.read(problemTypeProvider);
+
+    GameLogic gameLogic = GameLogicFactory.create(problemType);
+    problems = gameLogic.generateProblems(totalQuestions);
+
+    _setNextProblem();
+  }
+
+  void _setNextProblem() {
+    if (correctAnswers < problems.length) {
+      setState(() {
+        currentProblem = problems[correctAnswers].problem;
+        currentAnswer = problems[correctAnswers].answer;
+        values = List.filled(8, '0');
+        correct = false;
+      });
+    }
+  }
+
+  void _onAnswerSubmitted(String answer) {
+    final totalQuestions = ref.read(gameSettingsProvider);
+
+    if (answer == currentAnswer) {
+      setState(() {
         correct = true;
         correctAnswers += 1;
 
@@ -60,7 +86,7 @@ class _PlayScreenState extends ConsumerState<PlayScreen> {
         double percentage = (questionTime / totalDuration) * 100;
 
         questionDetails.add({
-          'question': targetValue.toString(),
+          'question': currentProblem,
           'time': questionTime,
           'percentage': percentage.toStringAsFixed(2),
         });
@@ -73,20 +99,19 @@ class _PlayScreenState extends ConsumerState<PlayScreen> {
         } else {
           Future.delayed(const Duration(milliseconds: 500), () {
             setState(() {
-              correct = false;
-              targetValue = GameLogic.generateTargetValue();
-              values = List.filled(8, '0');
               startTime = totalDuration;
+              _setNextProblem();
             });
           });
         }
-      }
-    });
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     final totalQuestions = ref.watch(gameSettingsProvider);
+    final problemType = ref.watch(problemTypeProvider);
 
     return Scaffold(
       appBar: AppBar(title: const Text("Play Mode")),
@@ -97,12 +122,7 @@ class _PlayScreenState extends ConsumerState<PlayScreen> {
           Expanded(
             child: Stack(
               children: [
-                if (!correct)
-                  BinaryInputWidget(
-                    targetValue: targetValue,
-                    values: values,
-                    onToggle: (index) => _toggleValue(index),
-                  ),
+                if (!correct) _buildInputWidget(problemType),
                 if (correct) const CorrectAnswerWidget(),
               ],
             ),
@@ -110,6 +130,34 @@ class _PlayScreenState extends ConsumerState<PlayScreen> {
         ],
       ),
     );
+  }
+
+  Widget _buildInputWidget(ProblemType problemType) {
+    if (problemType == ProblemType.decimalToBinary) {
+      return BinaryInputWidget(
+        targetValue: int.parse(currentProblem),
+        values: values,
+        onToggle: (index) {
+          setState(() {
+            values[index] = values[index] == '0' ? '1' : '0';
+          });
+          if (values.join() == currentAnswer) {
+            _onAnswerSubmitted(currentAnswer);
+          }
+        },
+      );
+    } else if (problemType == ProblemType.binaryToDecimal) {
+      return DecimalInputWidget(
+        enteredValue: '',
+        onNumberPressed: (String number) {
+          _onAnswerSubmitted(number);
+        },
+        onClearPressed: () {},
+        onDeletePressed: () {},
+      );
+    } else {
+      return const SizedBox.shrink();
+    }
   }
 }
 

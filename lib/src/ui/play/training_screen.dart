@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:d2b/src/domain/game_logic.dart';
+import 'package:d2b/src/state/problem_type.dart';
 import 'package:d2b/src/widgets/binary_input_widget.dart';
+import 'package:d2b/src/widgets/decimal_input_widget.dart';
 import 'package:d2b/src/widgets/correct_answer_widget.dart';
 import 'dart:async';
 
@@ -13,7 +15,7 @@ class TrainingScreen extends ConsumerStatefulWidget {
 }
 
 class _TrainingScreenState extends ConsumerState<TrainingScreen> {
-  int targetValue = 0;
+  late ProblemAnswerPair currentProblem;
   List<String> values = List.filled(8, '0');
   bool correct = false;
   late ScrollController _scrollController;
@@ -23,7 +25,6 @@ class _TrainingScreenState extends ConsumerState<TrainingScreen> {
   @override
   void initState() {
     super.initState();
-    targetValue = GameLogic.generateTargetValue();
     _scrollController = ScrollController();
 
     _timer = Timer.periodic(const Duration(seconds: 1), (Timer timer) {
@@ -31,6 +32,8 @@ class _TrainingScreenState extends ConsumerState<TrainingScreen> {
         totalDuration++;
       });
     });
+
+    _generateNewProblem();
   }
 
   @override
@@ -40,24 +43,32 @@ class _TrainingScreenState extends ConsumerState<TrainingScreen> {
     super.dispose();
   }
 
-  void _toggleValue(int index) {
+  void _generateNewProblem() {
+    final problemType = ref.read(problemTypeProvider);
+
+    GameLogic gameLogic = GameLogicFactory.create(problemType);
     setState(() {
-      values[index] = values[index] == '0' ? '1' : '0';
-      if (GameLogic.isAnswerCorrect(values, targetValue)) {
+      currentProblem = gameLogic.generateProblems(1).first;
+      values = List.filled(8, '0');
+      correct = false;
+    });
+  }
+
+  void _onAnswerSubmitted(String answer) {
+    if (answer == currentProblem.answer) {
+      setState(() {
         correct = true;
         Future.delayed(const Duration(milliseconds: 500), () {
-          setState(() {
-            correct = false;
-            targetValue = GameLogic.generateTargetValue();
-            values = List.filled(8, '0');
-          });
+          _generateNewProblem();
         });
-      }
-    });
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    final problemType = ref.watch(problemTypeProvider);
+
     return Scaffold(
       appBar: AppBar(title: const Text("Training Mode")),
       body: Column(
@@ -65,12 +76,7 @@ class _TrainingScreenState extends ConsumerState<TrainingScreen> {
           Expanded(
             child: Stack(
               children: [
-                if (!correct)
-                  BinaryInputWidget(
-                    targetValue: targetValue,
-                    values: values,
-                    onToggle: (index) => _toggleValue(index),
-                  ),
+                if (!correct) _buildInputWidget(problemType),
                 if (correct) const CorrectAnswerWidget(),
               ],
             ),
@@ -78,5 +84,33 @@ class _TrainingScreenState extends ConsumerState<TrainingScreen> {
         ],
       ),
     );
+  }
+
+  Widget _buildInputWidget(ProblemType problemType) {
+    if (problemType == ProblemType.decimalToBinary) {
+      return BinaryInputWidget(
+        targetValue: int.parse(currentProblem.problem),
+        values: values,
+        onToggle: (index) {
+          setState(() {
+            values[index] = values[index] == '0' ? '1' : '0';
+          });
+          if (values.join() == currentProblem.answer) {
+            _onAnswerSubmitted(currentProblem.answer);
+          }
+        },
+      );
+    } else if (problemType == ProblemType.binaryToDecimal) {
+      return DecimalInputWidget(
+        enteredValue: '',
+        onNumberPressed: (String number) {
+          _onAnswerSubmitted(number);
+        },
+        onClearPressed: () {},
+        onDeletePressed: () {},
+      );
+    } else {
+      return const SizedBox.shrink();
+    }
   }
 }
