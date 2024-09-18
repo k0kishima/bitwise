@@ -101,14 +101,7 @@ class _TrainingScreenState extends ConsumerState<TrainingScreen> {
         },
       );
     } else if (problemType == ProblemType.binaryToDecimal) {
-      return DecimalInputWidget(
-        enteredValue: '',
-        onNumberPressed: (String number) {
-          _onAnswerSubmitted(number);
-        },
-        onClearPressed: () {},
-        onDeletePressed: () {},
-      );
+      return const DecimalInputWidget();
     } else {
       return const SizedBox.shrink();
     }
