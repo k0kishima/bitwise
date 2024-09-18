@@ -147,7 +147,9 @@ class _PlayScreenState extends ConsumerState<PlayScreen> {
         },
       );
     } else if (problemType == ProblemType.binaryToDecimal) {
-      return const DecimalInputWidget();
+      return DecimalInputWidget(
+        binaryProblem: currentProblem,
+      );
     } else {
       return const SizedBox.shrink();
     }

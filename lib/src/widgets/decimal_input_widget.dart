@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 class DecimalInputWidget extends StatefulWidget {
-  const DecimalInputWidget({super.key});
+  final String binaryProblem;
+
+  const DecimalInputWidget({super.key, required this.binaryProblem});
 
   @override
   DecimalInputWidgetState createState() => DecimalInputWidgetState();
@@ -38,16 +40,22 @@ class DecimalInputWidgetState extends State<DecimalInputWidget> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        const Text(
-          'Input your answer:',
-          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-        ),
         const SizedBox(height: 20),
+        const Text(
+          'Convert the binary number:',
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 10),
+        Text(
+          widget.binaryProblem,
+          style: const TextStyle(fontSize: 48, fontWeight: FontWeight.bold),
+        ),
+        const Spacer(),
         Text(
           enteredValue.isEmpty ? '0' : enteredValue,
           style: const TextStyle(fontSize: 48, fontWeight: FontWeight.bold),
         ),
-        const Spacer(),
+        const SizedBox(height: 20),
         SizedBox(
           height: keypadHeight,
           child: Column(

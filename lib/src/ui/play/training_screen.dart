@@ -101,7 +101,9 @@ class _TrainingScreenState extends ConsumerState<TrainingScreen> {
         },
       );
     } else if (problemType == ProblemType.binaryToDecimal) {
-      return const DecimalInputWidget();
+      return DecimalInputWidget(
+        binaryProblem: currentProblem.problem,
+      );
     } else {
       return const SizedBox.shrink();
     }
