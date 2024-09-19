@@ -11,15 +11,14 @@ class TrainingScreen extends ConsumerStatefulWidget {
   const TrainingScreen({super.key});
 
   @override
-  _TrainingScreenState createState() => _TrainingScreenState();
+  TrainingScreenState createState() => TrainingScreenState();
 }
 
-class _TrainingScreenState extends ConsumerState<TrainingScreen> {
+class TrainingScreenState extends ConsumerState<TrainingScreen> {
   late ProblemAnswerPair currentProblem;
   List<String> values = List.filled(8, '0');
   bool correct = false;
   late ScrollController _scrollController;
-  Timer? _timer;
   int totalDuration = 0;
 
   @override
@@ -27,19 +26,12 @@ class _TrainingScreenState extends ConsumerState<TrainingScreen> {
     super.initState();
     _scrollController = ScrollController();
 
-    _timer = Timer.periodic(const Duration(seconds: 1), (Timer timer) {
-      setState(() {
-        totalDuration++;
-      });
-    });
-
     _generateNewProblem();
   }
 
   @override
   void dispose() {
     _scrollController.dispose();
-    _timer?.cancel();
     super.dispose();
   }
 
