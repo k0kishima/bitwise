@@ -7,6 +7,7 @@ import 'package:d2b/src/ui/play/training_screen.dart';
 import 'package:d2b/src/ui/play/end_screen.dart';
 import 'package:d2b/src/ui/settings/setting_screen.dart';
 import 'package:go_router/go_router.dart';
+import 'package:d2b/src/ui/theme.dart';
 
 void main() {
   runApp(
@@ -21,35 +22,11 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const baseTextStyle = TextStyle(color: Colors.black54);
-
     return MaterialApp.router(
       localizationsDelegates: L10n.localizationsDelegates,
       supportedLocales: L10n.supportedLocales,
       locale: const Locale('ja', ''),
-      theme: ThemeData(
-        primaryColor: Colors.black87,
-        appBarTheme: const AppBarTheme(
-          backgroundColor: Colors.black87,
-          foregroundColor: Colors.white,
-        ),
-        scaffoldBackgroundColor: Colors.white,
-        elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.white,
-            foregroundColor: Colors.grey.shade600,
-            side: const BorderSide(color: Colors.grey, width: 1),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(15),
-            ),
-          ),
-        ),
-        textTheme: const TextTheme(
-          bodyLarge: baseTextStyle,
-          bodyMedium: baseTextStyle,
-          bodySmall: baseTextStyle,
-        ),
-      ),
+      theme: AppTheme.theme,
       routerConfig: _router,
     );
   }
