@@ -13,14 +13,14 @@ class PlayScreen extends ConsumerStatefulWidget {
   const PlayScreen({super.key});
 
   @override
-  _PlayScreenState createState() => _PlayScreenState();
+  PlayScreenState createState() => PlayScreenState();
 }
 
-class _PlayScreenState extends ConsumerState<PlayScreen> {
+class PlayScreenState extends ConsumerState<PlayScreen> {
   List<ProblemAnswerPair> problems = [];
   String currentProblem = '';
   String currentAnswer = '';
-  List<String> values = List.filled(8, '0');
+  String currentValue = '';
   bool correct = false;
   int correctAnswers = 0;
   List<Map<String, dynamic>> questionDetails = [];
@@ -68,7 +68,7 @@ class _PlayScreenState extends ConsumerState<PlayScreen> {
       setState(() {
         currentProblem = problems[correctAnswers].problem;
         currentAnswer = problems[correctAnswers].answer;
-        values = List.filled(8, '0');
+        currentValue = '0' * 8;
         correct = false;
       });
     }
@@ -114,7 +114,7 @@ class _PlayScreenState extends ConsumerState<PlayScreen> {
     final problemType = ref.watch(problemTypeProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text("Play Mode")),
+      appBar: AppBar(),
       body: Column(
         children: [
           ProgressBarWidget(
@@ -136,19 +136,20 @@ class _PlayScreenState extends ConsumerState<PlayScreen> {
     if (problemType == ProblemType.decimalToBinary) {
       return BinaryInputWidget(
         targetValue: int.parse(currentProblem),
-        values: values,
-        onToggle: (index) {
+        values: currentValue.split(''),
+        onToggle: (index, newValues) {
           setState(() {
-            values[index] = values[index] == '0' ? '1' : '0';
+            currentValue = newValues.join();
+            if (currentValue == currentAnswer) {
+              _onAnswerSubmitted(currentAnswer);
+            }
           });
-          if (values.join() == currentAnswer) {
-            _onAnswerSubmitted(currentAnswer);
-          }
         },
       );
     } else if (problemType == ProblemType.binaryToDecimal) {
       return DecimalInputWidget(
         binaryProblem: currentProblem,
+        onSubmit: _onAnswerSubmitted,
       );
     } else {
       return const SizedBox.shrink();

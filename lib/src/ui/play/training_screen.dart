@@ -16,7 +16,7 @@ class TrainingScreen extends ConsumerStatefulWidget {
 
 class TrainingScreenState extends ConsumerState<TrainingScreen> {
   late ProblemAnswerPair currentProblem;
-  List<String> values = List.filled(8, '0');
+  String currentValue = '';
   bool correct = false;
   late ScrollController _scrollController;
 
@@ -39,7 +39,7 @@ class TrainingScreenState extends ConsumerState<TrainingScreen> {
     GameLogic gameLogic = GameLogicFactory.create(problemType);
     setState(() {
       currentProblem = gameLogic.generateProblems(1).first;
-      values = List.filled(8, '0');
+      currentValue = '0' * 8;
       correct = false;
     });
   }
@@ -89,7 +89,6 @@ class TrainingScreenState extends ConsumerState<TrainingScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Training Mode"),
         actions: [
           IconButton(
             icon: const Icon(Icons.remove_red_eye),
@@ -116,11 +115,11 @@ class TrainingScreenState extends ConsumerState<TrainingScreen> {
     if (problemType == ProblemType.decimalToBinary) {
       return BinaryInputWidget(
         targetValue: int.parse(currentProblem.problem),
-        values: values,
-        onToggle: (index) {
+        values: currentValue.split(''),
+        onToggle: (index, newValues) {
           setState(() {
-            values[index] = values[index] == '0' ? '1' : '0';
-            if (values.join() == currentProblem.answer) {
+            currentValue = newValues.join();
+            if (currentValue == currentProblem.answer) {
               _onAnswerSubmitted(currentProblem.answer);
             }
           });
@@ -129,6 +128,7 @@ class TrainingScreenState extends ConsumerState<TrainingScreen> {
     } else if (problemType == ProblemType.binaryToDecimal) {
       return DecimalInputWidget(
         binaryProblem: currentProblem.problem,
+        onSubmit: _onAnswerSubmitted,
       );
     } else {
       return const SizedBox.shrink();

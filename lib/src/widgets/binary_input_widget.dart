@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class BinaryInputWidget extends StatelessWidget {
   final int targetValue;
   final List<String> values;
-  final void Function(int) onToggle;
+  final void Function(int, List<String>) onToggle;
 
   const BinaryInputWidget({
     super.key,
@@ -19,7 +19,7 @@ class BinaryInputWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            targetValue.toString(),
+            'Target: $targetValue',
             style: const TextStyle(fontSize: 24, color: Colors.black87),
           ),
           const SizedBox(height: 20),
@@ -29,7 +29,12 @@ class BinaryInputWidget extends StatelessWidget {
               int index = entry.key;
               String value = entry.value;
               return GestureDetector(
-                onTap: () => onToggle(index),
+                onTap: () {
+                  List<String> updatedValues = List.from(values);
+                  updatedValues[index] =
+                      updatedValues[index] == '0' ? '1' : '0';
+                  onToggle(index, updatedValues);
+                },
                 child: Container(
                   width: 40,
                   height: 40,

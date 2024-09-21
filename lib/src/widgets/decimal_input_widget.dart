@@ -2,34 +2,46 @@ import 'package:flutter/material.dart';
 
 class DecimalInputWidget extends StatefulWidget {
   final String binaryProblem;
+  final void Function(String) onSubmit;
 
-  const DecimalInputWidget({super.key, required this.binaryProblem});
+  const DecimalInputWidget({
+    super.key,
+    required this.binaryProblem,
+    required this.onSubmit,
+  });
 
   @override
   DecimalInputWidgetState createState() => DecimalInputWidgetState();
 }
 
 class DecimalInputWidgetState extends State<DecimalInputWidget> {
-  String enteredValue = '';
+  String currentValue = '';
 
   void _onNumberPressed(String number) {
     setState(() {
-      enteredValue += number;
+      currentValue += number;
     });
+    _submitIfComplete();
   }
 
   void _onClearPressed() {
     setState(() {
-      enteredValue = '';
+      currentValue = '';
     });
+    _submitIfComplete();
   }
 
   void _onDeletePressed() {
     setState(() {
-      if (enteredValue.isNotEmpty) {
-        enteredValue = enteredValue.substring(0, enteredValue.length - 1);
+      if (currentValue.isNotEmpty) {
+        currentValue = currentValue.substring(0, currentValue.length - 1);
       }
     });
+    _submitIfComplete();
+  }
+
+  void _submitIfComplete() {
+    widget.onSubmit(currentValue);
   }
 
   @override
@@ -52,7 +64,7 @@ class DecimalInputWidgetState extends State<DecimalInputWidget> {
         ),
         const Spacer(),
         Text(
-          enteredValue.isEmpty ? '0' : enteredValue,
+          currentValue.isEmpty ? '0' : currentValue,
           style: const TextStyle(fontSize: 48, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 20),
