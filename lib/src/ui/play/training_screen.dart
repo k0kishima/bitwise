@@ -19,13 +19,11 @@ class TrainingScreenState extends ConsumerState<TrainingScreen> {
   List<String> values = List.filled(8, '0');
   bool correct = false;
   late ScrollController _scrollController;
-  int totalDuration = 0;
 
   @override
   void initState() {
     super.initState();
     _scrollController = ScrollController();
-
     _generateNewProblem();
   }
 
@@ -57,12 +55,48 @@ class TrainingScreenState extends ConsumerState<TrainingScreen> {
     }
   }
 
+  void _showHalfModal(BuildContext context) {
+    int targetScrollValue;
+
+    if (ref.read(problemTypeProvider) == ProblemType.binaryToDecimal) {
+      targetScrollValue = int.parse(currentProblem.problem, radix: 2);
+    } else {
+      targetScrollValue = int.parse(currentProblem.problem);
+    }
+
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return CheatSheetWidget(
+          targetValue: targetScrollValue,
+          scrollController: _scrollController,
+        );
+      },
+    );
+
+    Future.delayed(const Duration(milliseconds: 200), () {
+      _scrollController.animateTo(
+        targetScrollValue * 40.0,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final problemType = ref.watch(problemTypeProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text("Training Mode")),
+      appBar: AppBar(
+        title: const Text("Training Mode"),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.remove_red_eye),
+            onPressed: () => _showHalfModal(context),
+          ),
+        ],
+      ),
       body: Column(
         children: [
           Expanded(
@@ -86,10 +120,10 @@ class TrainingScreenState extends ConsumerState<TrainingScreen> {
         onToggle: (index) {
           setState(() {
             values[index] = values[index] == '0' ? '1' : '0';
+            if (values.join() == currentProblem.answer) {
+              _onAnswerSubmitted(currentProblem.answer);
+            }
           });
-          if (values.join() == currentProblem.answer) {
-            _onAnswerSubmitted(currentProblem.answer);
-          }
         },
       );
     } else if (problemType == ProblemType.binaryToDecimal) {
@@ -99,5 +133,61 @@ class TrainingScreenState extends ConsumerState<TrainingScreen> {
     } else {
       return const SizedBox.shrink();
     }
+  }
+}
+
+class CheatSheetWidget extends StatelessWidget {
+  final int targetValue;
+  final ScrollController scrollController;
+
+  const CheatSheetWidget({
+    super.key,
+    required this.targetValue,
+    required this.scrollController,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 300,
+      child: Column(
+        children: [
+          const Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Text(
+              'Cheat Sheet',
+              style: TextStyle(fontSize: 24, color: Colors.black87),
+            ),
+          ),
+          Expanded(
+            child: ListView.builder(
+              controller: scrollController,
+              itemCount: 256,
+              itemBuilder: (context, index) {
+                return Container(
+                  color: index == targetValue
+                      ? Colors.grey.shade300.withOpacity(0.5)
+                      : Colors.transparent,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Text('$index',
+                            style: const TextStyle(color: Colors.black87)),
+                        Text(
+                          index.toRadixString(2).padLeft(8, '0'),
+                          style: const TextStyle(color: Colors.black87),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
