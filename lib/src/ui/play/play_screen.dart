@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:d2b/src/state/game_settings.dart';
-import 'package:d2b/src/state/problem_type.dart';
+import 'package:d2b/src/providers/setting.dart';
 import 'package:d2b/src/domain/game_logic.dart';
 import 'package:go_router/go_router.dart';
 import 'dart:async';
@@ -54,8 +53,9 @@ class PlayScreenState extends ConsumerState<PlayScreen> {
   }
 
   void _initializeGame() {
-    final totalQuestions = ref.read(gameSettingsProvider);
-    final problemType = ref.read(problemTypeProvider);
+    final settings = ref.read(settingProvider);
+    final totalQuestions = settings.totalQuestions;
+    final problemType = settings.problemType;
 
     GameLogic gameLogic = GameLogicFactory.create(problemType);
     problems = gameLogic.generateProblems(totalQuestions);
@@ -75,7 +75,7 @@ class PlayScreenState extends ConsumerState<PlayScreen> {
   }
 
   void _onAnswerSubmitted(String answer) {
-    final totalQuestions = ref.read(gameSettingsProvider);
+    final totalQuestions = ref.read(settingProvider).totalQuestions;
 
     if (answer == currentAnswer) {
       setState(() {
@@ -110,8 +110,9 @@ class PlayScreenState extends ConsumerState<PlayScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final totalQuestions = ref.watch(gameSettingsProvider);
-    final problemType = ref.watch(problemTypeProvider);
+    final settings = ref.watch(settingProvider);
+    final totalQuestions = settings.totalQuestions;
+    final problemType = settings.problemType;
 
     return Scaffold(
       appBar: AppBar(),

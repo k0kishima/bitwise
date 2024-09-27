@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:d2b/src/domain/game_logic.dart';
-import 'package:d2b/src/state/problem_type.dart';
+import 'package:d2b/src/providers/setting.dart';
 import 'package:d2b/src/widgets/binary_input_widget.dart';
 import 'package:d2b/src/widgets/decimal_input_widget.dart';
 import 'package:d2b/src/widgets/correct_answer_widget.dart';
@@ -34,7 +34,7 @@ class TrainingScreenState extends ConsumerState<TrainingScreen> {
   }
 
   void _generateNewProblem() {
-    final problemType = ref.read(problemTypeProvider);
+    final problemType = ref.read(settingProvider).problemType;
 
     GameLogic gameLogic = GameLogicFactory.create(problemType);
     setState(() {
@@ -58,7 +58,7 @@ class TrainingScreenState extends ConsumerState<TrainingScreen> {
   void _showHalfModal(BuildContext context) {
     int targetScrollValue;
 
-    if (ref.read(problemTypeProvider) == ProblemType.binaryToDecimal) {
+    if (ref.read(settingProvider).problemType == ProblemType.binaryToDecimal) {
       targetScrollValue = int.parse(currentProblem.problem, radix: 2);
     } else {
       targetScrollValue = int.parse(currentProblem.problem);
@@ -85,7 +85,7 @@ class TrainingScreenState extends ConsumerState<TrainingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final problemType = ref.watch(problemTypeProvider);
+    final problemType = ref.watch(settingProvider).problemType;
 
     return Scaffold(
       appBar: AppBar(

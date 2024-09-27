@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:d2b/src/state/game_settings.dart';
-import 'package:d2b/src/state/training_mode.dart';
-import 'package:d2b/src/state/problem_type.dart';
+import 'package:d2b/src/providers/setting.dart';
 import 'package:go_router/go_router.dart';
 import 'package:d2b/src/domain/game_logic.dart';
 
@@ -36,8 +34,8 @@ class SettingsSliderWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final totalQuestions = ref.watch(gameSettingsProvider);
-    final isTrainingMode = ref.watch(trainingModeProvider);
+    final settings = ref.watch(settingProvider);
+    final isTrainingMode = settings.trainingMode;
 
     if (isTrainingMode) {
       return const SizedBox.shrink();
@@ -52,15 +50,13 @@ class SettingsSliderWidget extends ConsumerWidget {
         ),
         const SizedBox(height: 20),
         Slider(
-          value: totalQuestions.toDouble(),
+          value: settings.totalQuestions.toDouble(),
           min: 5,
           max: 20,
           divisions: 15,
-          label: totalQuestions.toString(),
+          label: settings.totalQuestions.toString(),
           onChanged: (double value) {
-            ref
-                .read(gameSettingsProvider.notifier)
-                .setTotalQuestions(value.toInt());
+            ref.read(settingProvider.notifier).setTotalQuestions(value.toInt());
           },
           activeColor: theme.primaryColor,
           inactiveColor: theme.disabledColor,
@@ -75,7 +71,7 @@ class TrainingModeSwitch extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isTrainingMode = ref.watch(trainingModeProvider);
+    final isTrainingMode = ref.watch(settingProvider).trainingMode;
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -87,7 +83,7 @@ class TrainingModeSwitch extends ConsumerWidget {
         Switch(
           value: isTrainingMode,
           onChanged: (bool value) {
-            ref.read(trainingModeProvider.notifier).setTrainingMode(value);
+            ref.read(settingProvider.notifier).setTrainingMode(value);
           },
           activeTrackColor: Colors.grey.shade800,
           activeColor: Colors.black,
@@ -104,7 +100,7 @@ class ProblemTypeSelector extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final problemType = ref.watch(problemTypeProvider);
+    final problemType = ref.watch(settingProvider).problemType;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -123,7 +119,7 @@ class ProblemTypeSelector extends ConsumerWidget {
               onSelected: (bool selected) {
                 if (selected) {
                   ref
-                      .read(problemTypeProvider.notifier)
+                      .read(settingProvider.notifier)
                       .setProblemType(ProblemType.decimalToBinary);
                 }
               },
@@ -134,7 +130,7 @@ class ProblemTypeSelector extends ConsumerWidget {
               onSelected: (bool selected) {
                 if (selected) {
                   ref
-                      .read(problemTypeProvider.notifier)
+                      .read(settingProvider.notifier)
                       .setProblemType(ProblemType.binaryToDecimal);
                 }
               },

@@ -3,7 +3,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:d2b/src/ui/settings/setting_screen.dart';
 import 'package:go_router/go_router.dart';
-import 'package:d2b/src/state/training_mode.dart';
+import 'package:d2b/src/providers/setting.dart';
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
@@ -56,7 +56,7 @@ class HomeScreen extends ConsumerWidget {
           height: 50,
           child: ElevatedButton(
             onPressed: () {
-              final isTrainingMode = ref.read(trainingModeProvider);
+              final isTrainingMode = ref.read(settingProvider).trainingMode;
               if (isTrainingMode) {
                 GoRouter.of(context).go('/training');
               } else {
