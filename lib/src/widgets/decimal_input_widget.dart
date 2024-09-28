@@ -72,42 +72,10 @@ class DecimalInputWidgetState extends State<DecimalInputWidget> {
           height: keypadHeight,
           child: Column(
             children: [
-              Expanded(
-                child: Row(
-                  children: [
-                    _buildNumberButton('1'),
-                    _buildNumberButton('2'),
-                    _buildNumberButton('3'),
-                  ],
-                ),
-              ),
-              Expanded(
-                child: Row(
-                  children: [
-                    _buildNumberButton('4'),
-                    _buildNumberButton('5'),
-                    _buildNumberButton('6'),
-                  ],
-                ),
-              ),
-              Expanded(
-                child: Row(
-                  children: [
-                    _buildNumberButton('7'),
-                    _buildNumberButton('8'),
-                    _buildNumberButton('9'),
-                  ],
-                ),
-              ),
-              Expanded(
-                child: Row(
-                  children: [
-                    _buildActionButton('C', _onClearPressed),
-                    _buildNumberButton('0'),
-                    _buildActionButton('⌫', _onDeletePressed),
-                  ],
-                ),
-              ),
+              _buildKeypadRow(['1', '2', '3']),
+              _buildKeypadRow(['4', '5', '6']),
+              _buildKeypadRow(['7', '8', '9']),
+              _buildKeypadRow(['C', '0', '⌫']),
             ],
           ),
         ),
@@ -115,26 +83,66 @@ class DecimalInputWidgetState extends State<DecimalInputWidget> {
     );
   }
 
+  Widget _buildKeypadRow(List<String> keys) {
+    return Expanded(
+      child: Row(
+        children: keys.map((key) {
+          if (key == 'C') {
+            return _buildActionButton(key, _onClearPressed);
+          } else if (key == '⌫') {
+            return _buildActionButton(key, _onDeletePressed);
+          } else {
+            return _buildNumberButton(key);
+          }
+        }).toList(),
+      ),
+    );
+  }
+
   Widget _buildNumberButton(String number) {
     return Expanded(
-      child: ElevatedButton(
-        onPressed: () => _onNumberPressed(number),
-        style: ElevatedButton.styleFrom(
-          padding: const EdgeInsets.all(15),
+      child: Container(
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.grey, width: 1),
         ),
-        child: Text(number, style: const TextStyle(fontSize: 24)),
+        child: SizedBox(
+          width: double.infinity,
+          height: double.infinity,
+          child: TextButton(
+            onPressed: () => _onNumberPressed(number),
+            style: TextButton.styleFrom(
+              padding: EdgeInsets.zero,
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.zero,
+              ),
+            ),
+            child: Text(number, style: const TextStyle(fontSize: 24)),
+          ),
+        ),
       ),
     );
   }
 
   Widget _buildActionButton(String label, void Function() action) {
     return Expanded(
-      child: ElevatedButton(
-        onPressed: action,
-        style: ElevatedButton.styleFrom(
-          padding: const EdgeInsets.all(15),
+      child: Container(
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.grey, width: 1),
         ),
-        child: Text(label, style: const TextStyle(fontSize: 24)),
+        child: SizedBox(
+          width: double.infinity,
+          height: double.infinity,
+          child: TextButton(
+            onPressed: action,
+            style: TextButton.styleFrom(
+              padding: EdgeInsets.zero,
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.zero,
+              ),
+            ),
+            child: Text(label, style: const TextStyle(fontSize: 24)),
+          ),
+        ),
       ),
     );
   }
