@@ -24,7 +24,6 @@ class PlayScreenState extends ConsumerState<PlayScreen> {
   int correctAnswers = 0;
   List<Map<String, dynamic>> questionDetails = [];
 
-  late ScrollController _scrollController;
   Timer? _timer;
   int startTime = 0;
   int totalDuration = 0;
@@ -32,7 +31,6 @@ class PlayScreenState extends ConsumerState<PlayScreen> {
   @override
   void initState() {
     super.initState();
-    _scrollController = ScrollController();
 
     _timer = Timer.periodic(const Duration(seconds: 1), (Timer timer) {
       setState(() {
@@ -47,7 +45,6 @@ class PlayScreenState extends ConsumerState<PlayScreen> {
 
   @override
   void dispose() {
-    _scrollController.dispose();
     _timer?.cancel();
     super.dispose();
   }

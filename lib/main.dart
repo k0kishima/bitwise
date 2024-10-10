@@ -5,7 +5,6 @@ import 'package:d2b/src/ui/home/home_screen.dart';
 import 'package:d2b/src/ui/play/play_screen.dart';
 import 'package:d2b/src/ui/play/training_screen.dart';
 import 'package:d2b/src/ui/play/end_screen.dart';
-import 'package:d2b/src/ui/settings/setting_screen.dart';
 import 'package:go_router/go_router.dart';
 import 'package:d2b/src/ui/theme.dart';
 
