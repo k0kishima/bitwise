@@ -36,12 +36,6 @@ class HomeScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.settings),
-            onPressed: showSettingsModal,
-          ),
-        ],
       ),
       body: Center(
         child: Text(
@@ -49,21 +43,31 @@ class HomeScreen extends ConsumerWidget {
           style: theme.textTheme.bodyLarge,
         ),
       ),
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.all(8.0),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          final isTrainingMode = ref.read(settingProvider).trainingMode;
+          if (isTrainingMode) {
+            GoRouter.of(context).go('/training');
+          } else {
+            GoRouter.of(context).go('/play');
+          }
+        },
+        child: const Icon(Icons.play_arrow),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      bottomNavigationBar: BottomAppBar(
+        shape: const CircularNotchedRectangle(),
+        notchMargin: 8.0,
         child: SizedBox(
-          width: double.infinity,
-          height: 50,
-          child: ElevatedButton(
-            onPressed: () {
-              final isTrainingMode = ref.read(settingProvider).trainingMode;
-              if (isTrainingMode) {
-                GoRouter.of(context).go('/training');
-              } else {
-                GoRouter.of(context).go('/play');
-              }
-            },
-            child: Text(l10n.play),
+          height: 50.0,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: <Widget>[
+              IconButton(
+                icon: const Icon(Icons.settings),
+                onPressed: showSettingsModal,
+              ),
+            ],
           ),
         ),
       ),
