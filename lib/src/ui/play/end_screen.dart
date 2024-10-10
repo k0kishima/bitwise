@@ -70,7 +70,7 @@ class EndScreen extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          GoRouter.of(context).go('/play', extra: UniqueKey());
+          GoRouter.of(context).replace('/play', extra: UniqueKey());
         },
         child: const Icon(Icons.refresh),
       ),

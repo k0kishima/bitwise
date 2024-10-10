@@ -112,7 +112,14 @@ class PlayScreenState extends ConsumerState<PlayScreen> {
     final problemType = settings.problemType;
 
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            GoRouter.of(context).go('/');
+          },
+        ),
+      ),
       body: Column(
         children: [
           ProgressBarWidget(
