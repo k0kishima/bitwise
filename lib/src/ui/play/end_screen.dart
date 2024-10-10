@@ -66,15 +66,32 @@ class EndScreen extends StatelessWidget {
               ),
             ),
           ),
-          const Padding(
-            padding: EdgeInsets.all(8.0),
-            child: SizedBox(
-              width: double.infinity,
-              height: 50,
-              child: HomeButton(),
-            ),
-          ),
         ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          GoRouter.of(context).go('/play', extra: UniqueKey());
+        },
+        child: const Icon(Icons.refresh),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      bottomNavigationBar: BottomAppBar(
+        shape: const CircularNotchedRectangle(),
+        notchMargin: 8.0,
+        child: SizedBox(
+          height: 50,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              IconButton(
+                icon: const Icon(Icons.home),
+                onPressed: () {
+                  GoRouter.of(context).go('/');
+                },
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -109,30 +126,6 @@ class EndScreen extends StatelessWidget {
           maxY: 1,
         ),
       ),
-    );
-  }
-}
-
-class HomeButton extends StatelessWidget {
-  const HomeButton({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final ButtonStyle buttonStyle = ElevatedButton.styleFrom(
-      backgroundColor: Colors.white,
-      foregroundColor: Colors.grey.shade600,
-      side: const BorderSide(color: Colors.grey, width: 1),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15),
-      ),
-    );
-
-    return ElevatedButton(
-      onPressed: () {
-        GoRouter.of(context).go('/');
-      },
-      style: buttonStyle,
-      child: const Text('Home'),
     );
   }
 }
