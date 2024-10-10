@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:d2b/src/ui/settings/setting_screen.dart';
+import 'package:d2b/src/ui/home/setting_widgets.dart';
 import 'package:go_router/go_router.dart';
 import 'package:d2b/src/providers/setting.dart';
 
@@ -18,25 +18,16 @@ class HomeScreen extends ConsumerWidget {
         context: context,
         isScrollControlled: true,
         builder: (BuildContext context) {
-          return DraggableScrollableSheet(
-            expand: false,
-            initialChildSize: 0.8,
-            maxChildSize: 0.8,
-            minChildSize: 0.8,
-            builder: (BuildContext context, ScrollController scrollController) {
-              return const Padding(
-                padding: EdgeInsets.all(16.0),
-                child: SettingScreen(),
-              );
-            },
+          return const Padding(
+            padding: EdgeInsets.all(16.0),
+            child: SettingPanel(),
           );
         },
       );
     }
 
     return Scaffold(
-      appBar: AppBar(
-      ),
+      appBar: AppBar(),
       body: Center(
         child: Text(
           l10n.greeting,

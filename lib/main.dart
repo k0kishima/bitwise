@@ -70,10 +70,6 @@ final _router = GoRouter(
           path: 'training',
           builder: (context, state) => const TrainingScreen(),
         ),
-        GoRoute(
-          path: 'setting',
-          builder: (context, state) => const SettingScreen(),
-        ),
       ],
     ),
   ],
