@@ -43,6 +43,7 @@ class HomeScreen extends ConsumerWidget {
             GoRouter.of(context).go('/play');
           }
         },
+        shape: const CircleBorder(),
         child: const Icon(Icons.play_arrow),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
