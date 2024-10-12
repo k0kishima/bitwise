@@ -1,30 +1,74 @@
 import 'package:flutter/material.dart';
 
-const baseTextStyle = TextStyle(color: Colors.black54);
+const primaryColor = Color(0xFF333333);
+const secondaryColor = Color(0xFF4F4F4F);
+const backgroundColor = Color(0xFFF5F5F5);
+const baseTextColor = Color(0xFF666666);
+const iconColor = Color(0xFFB0BEC5);
+const selectedColor = Color(0xFF424242);
+const unselectedColor = Color(0xFFE0E0E0);
+
+const baseTextStyle = TextStyle(color: baseTextColor);
 
 class AppTheme {
   static ThemeData get theme {
     return ThemeData(
-      primaryColor: Colors.black87,
+      primaryColor: primaryColor,
       appBarTheme: const AppBarTheme(
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.black87,
+        backgroundColor: backgroundColor,
+        foregroundColor: primaryColor,
       ),
-      scaffoldBackgroundColor: Colors.white,
-      elevatedButtonTheme: ElevatedButtonThemeData(
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.white,
-          foregroundColor: Colors.grey.shade600,
-          side: const BorderSide(color: Colors.grey, width: 1),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(15),
-          ),
-        ),
-      ),
+      scaffoldBackgroundColor: backgroundColor,
       textTheme: const TextTheme(
         bodyLarge: baseTextStyle,
         bodyMedium: baseTextStyle,
         bodySmall: baseTextStyle,
+        titleLarge: baseTextStyle,
+        titleMedium: baseTextStyle,
+        titleSmall: baseTextStyle,
+      ),
+      floatingActionButtonTheme: const FloatingActionButtonThemeData(
+        backgroundColor: primaryColor,
+        foregroundColor: Colors.white,
+      ),
+      bottomAppBarTheme: const BottomAppBarTheme(
+        color: primaryColor,
+      ),
+      bottomSheetTheme: const BottomSheetThemeData(
+        backgroundColor: backgroundColor,
+      ),
+      dividerColor: secondaryColor,
+      iconTheme: const IconThemeData(
+        color: iconColor,
+      ),
+      iconButtonTheme: IconButtonThemeData(
+        style: IconButton.styleFrom(
+          foregroundColor: iconColor,
+        ),
+      ),
+      switchTheme: SwitchThemeData(
+        trackColor: WidgetStateProperty.resolveWith((states) {
+          if (states.contains(WidgetState.selected)) {
+            return selectedColor;
+          }
+          return unselectedColor;
+        }),
+        thumbColor: WidgetStateProperty.resolveWith((states) {
+          if (states.contains(WidgetState.selected)) {
+            return Colors.black;
+          }
+          return Colors.grey.shade600;
+        }),
+      ),
+      chipTheme: ChipThemeData(
+        backgroundColor: unselectedColor,
+        selectedColor: selectedColor,
+        secondarySelectedColor: selectedColor,
+        labelStyle: const TextStyle(color: primaryColor),
+        secondaryLabelStyle: const TextStyle(color: Colors.white),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8.0),
+        ),
       ),
     );
   }
