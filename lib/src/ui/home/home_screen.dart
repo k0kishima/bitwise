@@ -18,10 +18,7 @@ class HomeScreen extends ConsumerWidget {
         context: context,
         isScrollControlled: true,
         builder: (BuildContext context) {
-          return const Padding(
-            padding: EdgeInsets.all(16.0),
-            child: SettingPanel(),
-          );
+          return const SettingPanel();
         },
       );
     }

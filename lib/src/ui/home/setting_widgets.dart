@@ -10,32 +10,38 @@ class SettingPanel extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final settings = ref.watch(settingProvider);
 
-    return Column(
-      children: [
-        _TrainingModeSwitch(
-          isTrainingMode: settings.trainingMode,
-          onChanged: (bool value) {
-            ref.read(settingProvider.notifier).setTrainingMode(value);
-          },
-        ),
-        const SizedBox(height: 20),
-        _ProblemTypeSelector(
-          problemType: settings.problemType,
-          onSelected: (ProblemType type) {
-            ref.read(settingProvider.notifier).setProblemType(type);
-          },
-        ),
-        const SizedBox(height: 20),
-        _SettingsSlider(
-          isTrainingMode: settings.trainingMode,
-          totalQuestions: settings.totalQuestions,
-          onChanged: (int value) {
-            ref.read(settingProvider.notifier).setTotalQuestions(value);
-          },
-        ),
-        const Spacer(),
-        const _SaveSettingsButton(),
-      ],
+    double modalHeight = MediaQuery.of(context).size.height * 0.6;
+    double modalWidth = MediaQuery.of(context).size.width;
+
+    return Container(
+      height: modalHeight,
+      width: modalWidth,
+      padding: const EdgeInsets.only(top: 30.0, left: 20.0, right: 20.0),
+      child: Column(
+        children: [
+          _TrainingModeSwitch(
+            isTrainingMode: settings.trainingMode,
+            onChanged: (bool value) {
+              ref.read(settingProvider.notifier).setTrainingMode(value);
+            },
+          ),
+          const SizedBox(height: 20),
+          _ProblemTypeSelector(
+            problemType: settings.problemType,
+            onSelected: (ProblemType type) {
+              ref.read(settingProvider.notifier).setProblemType(type);
+            },
+          ),
+          const SizedBox(height: 20),
+          _SettingsSlider(
+            isTrainingMode: settings.trainingMode,
+            totalQuestions: settings.totalQuestions,
+            onChanged: (int value) {
+              ref.read(settingProvider.notifier).setTotalQuestions(value);
+            },
+          ),
+        ],
+      ),
     );
   }
 }
@@ -158,35 +164,6 @@ class _SettingsSlider extends StatelessWidget {
           inactiveColor: theme.disabledColor,
         ),
       ],
-    );
-  }
-}
-
-class _SaveSettingsButton extends StatelessWidget {
-  const _SaveSettingsButton();
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
-    return SizedBox(
-      width: double.infinity,
-      height: 50,
-      child: ElevatedButton(
-        onPressed: () {
-          Navigator.of(context).pop();
-        },
-        style: ElevatedButton.styleFrom(
-          backgroundColor:
-              theme.elevatedButtonTheme.style?.backgroundColor?.resolve({}),
-          foregroundColor:
-              theme.elevatedButtonTheme.style?.foregroundColor?.resolve({}),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(15),
-          ),
-        ),
-        child: const Text('Save Settings'),
-      ),
     );
   }
 }
