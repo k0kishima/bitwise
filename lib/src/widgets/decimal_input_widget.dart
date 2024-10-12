@@ -46,6 +46,7 @@ class DecimalInputWidgetState extends State<DecimalInputWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final screenSize = MediaQuery.of(context).size;
     final keypadHeight = screenSize.height * 0.4;
 
@@ -55,50 +56,58 @@ class DecimalInputWidgetState extends State<DecimalInputWidget> {
         const SizedBox(height: 50),
         Text(
           widget.binaryProblem,
-          style: const TextStyle(fontSize: 48, fontWeight: FontWeight.bold),
+          style: theme.textTheme.headlineMedium,
         ),
         const Spacer(),
         Text(
           currentValue.isEmpty ? '0' : currentValue,
-          style: const TextStyle(fontSize: 48, fontWeight: FontWeight.bold),
+          style: theme.textTheme.headlineMedium,
         ),
         const SizedBox(height: 50),
         SizedBox(
           height: keypadHeight,
-          child: Column(
-            children: [
-              _buildKeypadRow(['1', '2', '3']),
-              _buildKeypadRow(['4', '5', '6']),
-              _buildKeypadRow(['7', '8', '9']),
-              _buildKeypadRow(['C', '0', '⌫']),
-            ],
-          ),
+          child: _buildKeypad(theme),
         ),
       ],
     );
   }
 
-  Widget _buildKeypadRow(List<String> keys) {
+  Widget _buildKeypad(ThemeData theme) {
+    return Container(
+      color: theme.colorScheme.surface,
+      child: Column(
+        children: [
+          _buildKeypadRow(['1', '2', '3'], theme),
+          _buildKeypadRow(['4', '5', '6'], theme),
+          _buildKeypadRow(['7', '8', '9'], theme),
+          _buildKeypadRow(['C', '0', '⌫'], theme),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildKeypadRow(List<String> keys, ThemeData theme) {
     return Expanded(
       child: Row(
         children: keys.map((key) {
           if (key == 'C') {
-            return _buildActionButton(key, _onClearPressed);
+            return _buildActionButton(key, _onClearPressed, theme);
           } else if (key == '⌫') {
-            return _buildActionButton(key, _onDeletePressed);
+            return _buildActionButton(key, _onDeletePressed, theme);
           } else {
-            return _buildNumberButton(key);
+            return _buildNumberButton(key, theme);
           }
         }).toList(),
       ),
     );
   }
 
-  Widget _buildNumberButton(String number) {
+  Widget _buildNumberButton(String number, ThemeData theme) {
     return Expanded(
       child: Container(
         decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey, width: 1),
+          color: theme.colorScheme.surface,
+          border: Border.all(color: theme.dividerColor, width: 1),
         ),
         child: SizedBox(
           width: double.infinity,
@@ -110,6 +119,7 @@ class DecimalInputWidgetState extends State<DecimalInputWidget> {
               shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.zero,
               ),
+              foregroundColor: theme.colorScheme.onSurface,
             ),
             child: Text(number, style: const TextStyle(fontSize: 24)),
           ),
@@ -118,11 +128,13 @@ class DecimalInputWidgetState extends State<DecimalInputWidget> {
     );
   }
 
-  Widget _buildActionButton(String label, void Function() action) {
+  Widget _buildActionButton(
+      String label, void Function() action, ThemeData theme) {
     return Expanded(
       child: Container(
         decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey, width: 1),
+          color: theme.colorScheme.secondaryContainer,
+          border: Border.all(color: theme.dividerColor, width: 1),
         ),
         child: SizedBox(
           width: double.infinity,
@@ -134,6 +146,7 @@ class DecimalInputWidgetState extends State<DecimalInputWidget> {
               shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.zero,
               ),
+              foregroundColor: theme.colorScheme.onSecondaryContainer,
             ),
             child: Text(label, style: const TextStyle(fontSize: 24)),
           ),

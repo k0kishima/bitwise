@@ -56,18 +56,19 @@ class TrainingScreenState extends ConsumerState<TrainingScreen> {
   }
 
   void _showHalfModal(BuildContext context) {
-    int targetScrollValue;
-
-    if (ref.read(settingProvider).problemType == ProblemType.binaryToDecimal) {
-      targetScrollValue = int.parse(currentProblem.problem, radix: 2);
-    } else {
-      targetScrollValue = int.parse(currentProblem.problem);
-    }
+    int targetScrollValue =
+        ref.read(settingProvider).problemType == ProblemType.binaryToDecimal
+            ? int.parse(currentProblem.problem, radix: 2)
+            : int.parse(currentProblem.problem);
 
     showModalBottomSheet(
       context: context,
+      // TODO: 角丸にならないので要修正
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
       builder: (context) {
-        return CheatSheetWidget(
+        return CheatSheet(
           targetValue: targetScrollValue,
           scrollController: _scrollController,
         );
@@ -85,6 +86,7 @@ class TrainingScreenState extends ConsumerState<TrainingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final problemType = ref.watch(settingProvider).problemType;
 
     return Scaffold(
@@ -93,6 +95,7 @@ class TrainingScreenState extends ConsumerState<TrainingScreen> {
           IconButton(
             icon: const Icon(Icons.remove_red_eye),
             onPressed: () => _showHalfModal(context),
+            color: theme.iconTheme.color,
           ),
         ],
       ),
@@ -136,11 +139,11 @@ class TrainingScreenState extends ConsumerState<TrainingScreen> {
   }
 }
 
-class CheatSheetWidget extends StatelessWidget {
+class CheatSheet extends StatelessWidget {
   final int targetValue;
   final ScrollController scrollController;
 
-  const CheatSheetWidget({
+  const CheatSheet({
     super.key,
     required this.targetValue,
     required this.scrollController,
@@ -148,15 +151,18 @@ class CheatSheetWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
+    final theme = Theme.of(context);
+
+    return Container(
       height: 300,
+      color: theme.colorScheme.surface,
       child: Column(
         children: [
-          const Padding(
-            padding: EdgeInsets.all(8.0),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
             child: Text(
               'Cheat Sheet',
-              style: TextStyle(fontSize: 24, color: Colors.black87),
+              style: theme.textTheme.headlineSmall,
             ),
           ),
           Expanded(
@@ -166,18 +172,20 @@ class CheatSheetWidget extends StatelessWidget {
               itemBuilder: (context, index) {
                 return Container(
                   color: index == targetValue
-                      ? Colors.grey.shade300.withOpacity(0.5)
+                      ? theme.colorScheme.secondary.withOpacity(0.5)
                       : Colors.transparent,
                   child: Padding(
                     padding: const EdgeInsets.symmetric(vertical: 10.0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        Text('$index',
-                            style: const TextStyle(color: Colors.black87)),
+                        Text(
+                          '$index',
+                          style: theme.textTheme.bodyLarge,
+                        ),
                         Text(
                           index.toRadixString(2).padLeft(8, '0'),
-                          style: const TextStyle(color: Colors.black87),
+                          style: theme.textTheme.bodyLarge,
                         ),
                       ],
                     ),

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 const primaryColor = Color(0xFF333333);
 const secondaryColor = Color(0xFF4F4F4F);
 const backgroundColor = Color(0xFFF5F5F5);
+const surfaceColor = Color(0xFFE0E0E0);
 const baseTextColor = Color(0xFF666666);
 const iconColor = Color(0xFFB0BEC5);
 const selectedColor = Color(0xFF424242);
@@ -23,6 +24,17 @@ class AppTheme {
         foregroundColor: primaryColor,
       ),
       scaffoldBackgroundColor: backgroundColor,
+      colorScheme: const ColorScheme(
+        primary: primaryColor,
+        secondary: secondaryColor,
+        surface: surfaceColor,
+        onPrimary: Colors.white,
+        onSecondary: Colors.white,
+        onSurface: Colors.black,
+        brightness: Brightness.light,
+        error: Colors.red,
+        onError: Colors.white,
+      ),
       textTheme: const TextTheme(
         bodyLarge: baseTextStyle,
         bodyMedium: baseTextStyle,

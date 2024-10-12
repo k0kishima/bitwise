@@ -111,7 +111,7 @@ class EndScreen extends StatelessWidget {
                 BarChartRodData(
                   toY: 1,
                   width: percentage,
-                  color: Colors.blue,
+                  color: Colors.grey.shade600,
                   borderRadius: BorderRadius.circular(5),
                 ),
               ],

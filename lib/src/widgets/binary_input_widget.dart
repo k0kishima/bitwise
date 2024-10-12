@@ -14,13 +14,15 @@ class BinaryInputWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
             '$targetValue',
-            style: const TextStyle(fontSize: 24, color: Colors.black87),
+            style: theme.textTheme.headlineSmall,
           ),
           const SizedBox(height: 20),
           Row(
@@ -41,10 +43,7 @@ class BinaryInputWidget extends StatelessWidget {
                   alignment: Alignment.center,
                   margin: const EdgeInsets.symmetric(horizontal: 5),
                   color: Colors.grey.shade200,
-                  child: Text(
-                    value,
-                    style: const TextStyle(fontSize: 24, color: Colors.black87),
-                  ),
+                  child: Text(value, style: theme.textTheme.headlineSmall),
                 ),
               );
             }).toList(),
