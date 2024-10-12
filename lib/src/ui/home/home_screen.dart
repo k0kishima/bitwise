@@ -27,7 +27,7 @@ class HomeScreen extends ConsumerWidget {
       appBar: AppBar(),
       body: Center(
         child: Text(
-          l10n.greeting,
+          l10n.appName,
           style: theme.textTheme.bodyLarge,
         ),
       ),

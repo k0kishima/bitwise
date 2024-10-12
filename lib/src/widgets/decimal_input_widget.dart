@@ -52,12 +52,7 @@ class DecimalInputWidgetState extends State<DecimalInputWidget> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        const SizedBox(height: 20),
-        const Text(
-          'Convert the binary number:',
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-        ),
-        const SizedBox(height: 10),
+        const SizedBox(height: 50),
         Text(
           widget.binaryProblem,
           style: const TextStyle(fontSize: 48, fontWeight: FontWeight.bold),
@@ -67,7 +62,7 @@ class DecimalInputWidgetState extends State<DecimalInputWidget> {
           currentValue.isEmpty ? '0' : currentValue,
           style: const TextStyle(fontSize: 48, fontWeight: FontWeight.bold),
         ),
-        const SizedBox(height: 20),
+        const SizedBox(height: 50),
         SizedBox(
           height: keypadHeight,
           child: Column(

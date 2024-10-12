@@ -19,7 +19,7 @@ class BinaryInputWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            'Target: $targetValue',
+            '$targetValue',
             style: const TextStyle(fontSize: 24, color: Colors.black87),
           ),
           const SizedBox(height: 20),

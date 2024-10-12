@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:d2b/src/providers/setting.dart';
 import 'package:d2b/src/domain/game_logic.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SettingPanel extends ConsumerWidget {
   const SettingPanel({super.key});
@@ -10,6 +11,7 @@ class SettingPanel extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final settings = ref.watch(settingProvider);
     final theme = Theme.of(context);
+    final l10n = L10n.of(context);
 
     double modalHeight = MediaQuery.of(context).size.height * 0.6;
     double modalWidth = MediaQuery.of(context).size.width;
@@ -23,11 +25,11 @@ class SettingPanel extends ConsumerWidget {
         children: [
           Align(
             alignment: Alignment.center,
-            child: Text('設定', style: theme.textTheme.titleMedium),
+            child: Text(l10n.titleSettings, style: theme.textTheme.titleMedium),
           ),
           _buildSection(
             context: context,
-            title: 'Training Mode',
+            title: l10n.trainingMode,
             child: _TrainingModeSwitch(
               isTrainingMode: settings.trainingMode,
               onChanged: (value) {
@@ -38,7 +40,7 @@ class SettingPanel extends ConsumerWidget {
           Divider(color: theme.dividerColor),
           _buildSection(
             context: context,
-            title: 'Problem Type',
+            title: l10n.problemType,
             child: _ProblemTypeSelector(
               problemType: settings.problemType,
               onSelected: (type) {
@@ -50,7 +52,7 @@ class SettingPanel extends ConsumerWidget {
           if (!settings.trainingMode)
             _buildSection(
               context: context,
-              title: 'Number of Questions',
+              title: l10n.numberOfQuestions,
               child: _SettingsSlider(
                 isTrainingMode: settings.trainingMode,
                 totalQuestions: settings.totalQuestions,
@@ -116,10 +118,12 @@ class _ProblemTypeSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = L10n.of(context);
+
     return Row(
       children: [
         ChoiceChip(
-          label: const Text('10 → 2'),
+          label: Text(l10n.decimalToBinary),
           selected: problemType == ProblemType.decimalToBinary,
           onSelected: (selected) {
             if (selected) onSelected(ProblemType.decimalToBinary);
@@ -127,7 +131,7 @@ class _ProblemTypeSelector extends StatelessWidget {
         ),
         const SizedBox(width: 10),
         ChoiceChip(
-          label: const Text('2 → 10'),
+          label: Text(l10n.binaryToDecimal),
           selected: problemType == ProblemType.binaryToDecimal,
           onSelected: (selected) {
             if (selected) onSelected(ProblemType.binaryToDecimal);

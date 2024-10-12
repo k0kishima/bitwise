@@ -1,3 +1,7 @@
-# d2b
+## Localization (l10n) Setup
 
-A new Flutter project.
+If you update any dictionary files (e.g., `.arb` files), make sure to run the following command:
+
+```bash
+$ flutter gen-l10n
+```

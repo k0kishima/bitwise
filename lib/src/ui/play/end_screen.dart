@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
 import 'package:fl_chart/fl_chart.dart';
 
@@ -14,6 +15,8 @@ class EndScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = L10n.of(context);
+
     return Scaffold(
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -22,7 +25,7 @@ class EndScreen extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Text(
-              'トータル: $totalDuration秒',
+              l10n.totalDurationLabel(totalDuration),
               style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
           ),
@@ -43,17 +46,17 @@ class EndScreen extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            '問題 $questionTextの変換',
+                            l10n.questionConversion(questionText),
                             style: const TextStyle(fontSize: 18),
                           ),
                           const SizedBox(height: 8),
                           Text(
-                            '$timeTaken 秒',
+                            l10n.timeTakenLabel(timeTaken),
                             style: const TextStyle(fontSize: 16),
                           ),
                           const SizedBox(height: 8),
                           Text(
-                            '${percentage.toStringAsFixed(2)}%',
+                            l10n.percentageLabel(percentage.toStringAsFixed(2)),
                             style: const TextStyle(fontSize: 16),
                           ),
                           const SizedBox(height: 8),

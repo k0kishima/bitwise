@@ -1,6 +1,44 @@
 {
   "@@locale": "ja",
   "appName": "Bitwise",
-  "greeting": "Bitwise へようこそ",
-  "play": "開始"
+  "titleSettings": "設定",
+  "@titleSettings": {
+    "description": "設定パネルのタイトル"
+  },
+  "trainingMode": "トレーニングモード",
+  "@trainingMode": {
+    "description": "トレーニングモードのラベル"
+  },
+  "problemType": "問題タイプ",
+  "@problemType": {
+    "description": "問題タイプのラベル"
+  },
+  "numberOfQuestions": "問題の数",
+  "@numberOfQuestions": {
+    "description": "スライダーで設定する問題数のラベル"
+  },
+  "binaryToDecimal": "2 → 10",
+  "@binaryToDecimal": {
+    "description": "2進数から10進数の選択肢"
+  },
+  "decimalToBinary": "10 → 2",
+  "@decimalToBinary": {
+    "description": "10進数から2進数の選択肢"
+  },
+  "totalDurationLabel": "トータル: {totalDuration}秒",
+  "@totalDurationLabel": {
+    "description": "トータル時間の表示"
+  },
+  "questionConversion": "問題 {question}の変換",
+  "@questionConversion": {
+    "description": "各問題の変換ラベル"
+  },
+  "timeTakenLabel": "{timeTaken} 秒",
+  "@timeTakenLabel": {
+    "description": "各問題の所要時間"
+  },
+  "percentageLabel": "{percentage}%",
+  "@percentageLabel": {
+    "description": "各問題の所要時間の割合"
+  }
 }

@@ -24,7 +24,19 @@ class MainApp extends StatelessWidget {
     return MaterialApp.router(
       localizationsDelegates: L10n.localizationsDelegates,
       supportedLocales: L10n.supportedLocales,
-      locale: const Locale('ja', ''),
+      localeResolutionCallback: (locale, supportedLocales) {
+        if (locale == null) {
+          return const Locale('en');
+        }
+
+        for (var supportedLocale in supportedLocales) {
+          if (supportedLocale.languageCode == locale.languageCode) {
+            return supportedLocale;
+          }
+        }
+
+        return const Locale('en');
+      },
       theme: AppTheme.theme,
       routerConfig: _router,
     );

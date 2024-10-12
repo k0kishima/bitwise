@@ -1,6 +1,44 @@
 {
   "@@locale": "en",
   "appName": "Bitwise",
-  "greeting": "Welcome to Bitwise!",
-  "play": "Play"
+  "titleSettings": "Settings",
+  "@titleSettings": {
+    "description": "Title of the settings panel"
+  },
+  "trainingMode": "Training Mode",
+  "@trainingMode": {
+    "description": "Label for the training mode"
+  },
+  "problemType": "Problem Type",
+  "@problemType": {
+    "description": "Label for the problem type"
+  },
+  "numberOfQuestions": "Number of Questions",
+  "@numberOfQuestions": {
+    "description": "Label for the slider setting the number of questions"
+  },
+  "binaryToDecimal": "2 → 10",
+  "@binaryToDecimal": {
+    "description": "Choice for converting from binary to decimal"
+  },
+  "decimalToBinary": "10 → 2",
+  "@decimalToBinary": {
+    "description": "Choice for converting from decimal to binary"
+  },
+  "totalDurationLabel": "Total: {totalDuration} seconds",
+  "@totalDurationLabel": {
+    "description": "Display for the total duration"
+  },
+  "questionConversion": "Conversion of question {question}",
+  "@questionConversion": {
+    "description": "Label for each question conversion"
+  },
+  "timeTakenLabel": "{timeTaken} seconds",
+  "@timeTakenLabel": {
+    "description": "Display of the time taken for each question"
+  },
+  "percentageLabel": "{percentage}%",
+  "@percentageLabel": {
+    "description": "Percentage of the total time taken for each question"
+  }
 }
