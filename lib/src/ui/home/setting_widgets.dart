@@ -9,6 +9,7 @@ class SettingPanel extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final settings = ref.watch(settingProvider);
+    final theme = Theme.of(context);
 
     double modalHeight = MediaQuery.of(context).size.height * 0.6;
     double modalWidth = MediaQuery.of(context).size.width;
@@ -16,30 +17,70 @@ class SettingPanel extends ConsumerWidget {
     return Container(
       height: modalHeight,
       width: modalWidth,
-      padding: const EdgeInsets.only(top: 30.0, left: 20.0, right: 20.0),
+      padding: const EdgeInsets.symmetric(vertical: 30.0, horizontal: 20.0),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _TrainingModeSwitch(
-            isTrainingMode: settings.trainingMode,
-            onChanged: (bool value) {
-              ref.read(settingProvider.notifier).setTrainingMode(value);
-            },
+          Align(
+            alignment: Alignment.center,
+            child: Text('設定', style: theme.textTheme.titleMedium),
           ),
-          const SizedBox(height: 20),
-          _ProblemTypeSelector(
-            problemType: settings.problemType,
-            onSelected: (ProblemType type) {
-              ref.read(settingProvider.notifier).setProblemType(type);
-            },
+          _buildSection(
+            context: context,
+            title: 'Training Mode',
+            child: _TrainingModeSwitch(
+              isTrainingMode: settings.trainingMode,
+              onChanged: (value) {
+                ref.read(settingProvider.notifier).setTrainingMode(value);
+              },
+            ),
           ),
-          const SizedBox(height: 20),
-          _SettingsSlider(
-            isTrainingMode: settings.trainingMode,
-            totalQuestions: settings.totalQuestions,
-            onChanged: (int value) {
-              ref.read(settingProvider.notifier).setTotalQuestions(value);
-            },
+          Divider(color: theme.dividerColor),
+          _buildSection(
+            context: context,
+            title: 'Problem Type',
+            child: _ProblemTypeSelector(
+              problemType: settings.problemType,
+              onSelected: (type) {
+                ref.read(settingProvider.notifier).setProblemType(type);
+              },
+            ),
           ),
+          Divider(color: theme.dividerColor),
+          if (!settings.trainingMode)
+            _buildSection(
+              context: context,
+              title: 'Number of Questions',
+              child: _SettingsSlider(
+                isTrainingMode: settings.trainingMode,
+                totalQuestions: settings.totalQuestions,
+                onChanged: (value) {
+                  ref.read(settingProvider.notifier).setTotalQuestions(value);
+                },
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSection({
+    required BuildContext context,
+    required String title,
+    required Widget child,
+  }) {
+    final theme = Theme.of(context);
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            title,
+            style: theme.textTheme.titleSmall,
+          ),
+          child,
         ],
       ),
     );
@@ -57,22 +98,9 @@ class _TrainingModeSwitch extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        const Text(
-          'Training Mode',
-          style: TextStyle(fontSize: 18),
-        ),
-        Switch(
-          value: isTrainingMode,
-          onChanged: onChanged,
-          activeTrackColor: Colors.grey.shade800,
-          activeColor: Colors.black,
-          inactiveTrackColor: Colors.grey.shade300,
-          inactiveThumbColor: Colors.grey.shade600,
-        ),
-      ],
+    return Switch(
+      value: isTrainingMode,
+      onChanged: onChanged,
     );
   }
 }
@@ -88,36 +116,22 @@ class _ProblemTypeSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    return Row(
       children: [
-        const Text(
-          'Problem Type',
-          style: TextStyle(fontSize: 18),
+        ChoiceChip(
+          label: const Text('10 → 2'),
+          selected: problemType == ProblemType.decimalToBinary,
+          onSelected: (selected) {
+            if (selected) onSelected(ProblemType.decimalToBinary);
+          },
         ),
-        const SizedBox(height: 20),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            ChoiceChip(
-              label: const Text('10 → 2'),
-              selected: problemType == ProblemType.decimalToBinary,
-              onSelected: (bool selected) {
-                if (selected) {
-                  onSelected(ProblemType.decimalToBinary);
-                }
-              },
-            ),
-            ChoiceChip(
-              label: const Text('2 → 10'),
-              selected: problemType == ProblemType.binaryToDecimal,
-              onSelected: (bool selected) {
-                if (selected) {
-                  onSelected(ProblemType.binaryToDecimal);
-                }
-              },
-            ),
-          ],
+        const SizedBox(width: 10),
+        ChoiceChip(
+          label: const Text('2 → 10'),
+          selected: problemType == ProblemType.binaryToDecimal,
+          onSelected: (selected) {
+            if (selected) onSelected(ProblemType.binaryToDecimal);
+          },
         ),
       ],
     );
@@ -143,27 +157,17 @@ class _SettingsSlider extends StatelessWidget {
       return const SizedBox.shrink();
     }
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          'Number of Questions',
-          style: TextStyle(fontSize: 18),
-        ),
-        const SizedBox(height: 20),
-        Slider(
-          value: totalQuestions.toDouble(),
-          min: 5,
-          max: 20,
-          divisions: 15,
-          label: totalQuestions.toString(),
-          onChanged: (double value) {
-            onChanged(value.toInt());
-          },
-          activeColor: theme.primaryColor,
-          inactiveColor: theme.disabledColor,
-        ),
-      ],
+    return Slider(
+      value: totalQuestions.toDouble(),
+      min: 5,
+      max: 20,
+      divisions: 15,
+      label: totalQuestions.toString(),
+      onChanged: (value) {
+        onChanged(value.toInt());
+      },
+      activeColor: theme.primaryColor,
+      inactiveColor: theme.disabledColor,
     );
   }
 }

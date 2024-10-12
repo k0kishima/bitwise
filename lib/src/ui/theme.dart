@@ -9,6 +9,10 @@ const selectedColor = Color(0xFF424242);
 const unselectedColor = Color(0xFFE0E0E0);
 
 const baseTextStyle = TextStyle(color: baseTextColor);
+const titleTextStyle = TextStyle(
+  color: baseTextColor,
+  fontWeight: FontWeight.bold,
+);
 
 class AppTheme {
   static ThemeData get theme {
@@ -23,9 +27,9 @@ class AppTheme {
         bodyLarge: baseTextStyle,
         bodyMedium: baseTextStyle,
         bodySmall: baseTextStyle,
-        titleLarge: baseTextStyle,
-        titleMedium: baseTextStyle,
-        titleSmall: baseTextStyle,
+        titleLarge: titleTextStyle,
+        titleMedium: titleTextStyle,
+        titleSmall: titleTextStyle,
       ),
       floatingActionButtonTheme: const FloatingActionButtonThemeData(
         backgroundColor: primaryColor,
